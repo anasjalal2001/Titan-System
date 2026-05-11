@@ -9,7 +9,7 @@ import math
 # 1. CORE ARCHITECTURE & TIME ENGINE (محرك الوقت الأساسي)
 # =====================================================================
 st.set_page_config(
-    page_title="Titan V25 - Enterprise Monolith", 
+    page_title="Titan V26 - Synchronized Architect", 
     page_icon="👑", 
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -19,7 +19,7 @@ def get_makkah_time():
     """
     محرك التوقيت الدقيق لمكة المكرمة (UTC+3)
     يعمل بشكل مستقل عن إعدادات السيرفر السحابي لضمان الدقة المطلقة.
-    يتم استدعاء هذه الدالة في كل حركة لضمان التزامن اللحظي.
+    يتم استدعاء هذه الدالة في كل حركة لضمان التزامن اللحظي الميداني.
     """
     utc_time = datetime.utcnow()
     makkah_time = utc_time + timedelta(hours=3)
@@ -178,6 +178,9 @@ def inject_custom_css():
     """
     st.markdown(css_code, unsafe_allow_html=True)
 
+# استدعاء الواجهة فوراً
+inject_custom_css()
+
 # =====================================================================
 # 3. ROBUST SESSION STATE MANAGEMENT (إدارة الذاكرة المؤقتة)
 # =====================================================================
@@ -195,7 +198,8 @@ def initialize_session_states():
         'meal_cals', 
         'meal_protein', 
         'pre_workout_pain',
-        'selected_origin_loc'
+        'selected_origin_loc',
+        'gps_minutes'
     ]
     
     for state in states_to_init:
@@ -209,15 +213,20 @@ def initialize_session_states():
             elif state == 'pre_workout_pain': 
                 st.session_state[state] = "سليم 100%"
             elif state == 'selected_origin_loc':
-                st.session_state[state] = "المنزل (جدة - المروة)"
+                st.session_state[state] = "🏠 البيت (جدة - المروة)"
+            elif state == 'gps_minutes':
+                st.session_state[state] = 30
+
+initialize_session_states()
 
 # =====================================================================
 # 4. SECURE CLOUD CONNECTORS (محركات الاتصال السحابي)
 # =====================================================================
+@st.cache_resource(ttl="10m")
 def get_db_connection():
     """
     تأسيس الاتصال بقاعدة بيانات جوجل شيتس بصمت.
-    يمنع ظهور رسائل الخطأ المباشرة للواجهة الأمامية.
+    تم استخدام نظام الكاش لتقليل الضغط على السيرفر وتسريع التطبيق.
     """
     try: 
         return st.connection("gsheets", type=GSheetsConnection)
@@ -275,80 +284,21 @@ def overwrite_sheet_safe(sheet_name, df_new):
 
 # =====================================================================
 # 5. TITAN INTERNAL ROUTING ENGINE (محرك الملاحة وحساب المسافات)
-# خوارزمية داخلية تغني عن استخدام Google Maps API المدفوع
 # =====================================================================
-def haversine_distance(lat1, lon1, lat2, lon2):
-    """
-    معادلة هافرسين لحساب المسافة الدقيقة بين نقطتين جغرافيتين بالكيلومتر
-    مبنية على نصف قطر الأرض لضمان دقة الحساب الهندسي.
-    """
-    R = 6371.0 # نصف قطر الأرض بالكيلومتر
-    
-    dlat = math.radians(lat2 - lat1)
-    dlon = math.radians(lon2 - lon1)
-    
-    a = math.sin(dlat / 2)**2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2)**2
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-    
-    distance = R * c
-    return distance
-
-def calculate_smart_eta(origin_name):
+def get_dynamic_schedule(attendance_mode, user_input_minutes):
     """
     محرك الزحام والملاحة التفاعلي.
-    يأخذ نقطة الانطلاق، يحسب المسافة للكيلومتر، ويطبق مصفوفة الزحام (Traffic Matrix)
-    بناءً على التوقيت الحالي لمدينة جدة ومكة.
+    يأخذ الدقائق المباشرة من المستخدم (عبر خرائط جوجل) ويبني الجدول الزمني بالدقيقة.
     """
-    # إحداثيات الوجهة: نادي بودي ماسترز الروضة - جدة
-    dest_lat = 21.5768
-    dest_lon = 39.1620
-    
-    # تحديد إحداثيات الانطلاق بناءً على اختيار المستخدم
-    if origin_name == "المنزل (جدة - المروة)":
-        origin_lat = 21.6214
-        origin_lon = 39.1989
-        base_speed_kmh = 60 # سرعة شوارع داخلية
-        
-    elif origin_name == "العمل (جدة)":
-        origin_lat = 21.5200
-        origin_lon = 39.1700
-        base_speed_kmh = 50 # زحام وسط المدينة
-        
-    elif origin_name == "العمل (مكة المكرمة)":
-        origin_lat = 21.4225
-        origin_lon = 39.8262
-        base_speed_kmh = 100 # خط الحرمين السريع
-        
-    else:
-        # حالة افتراضية
-        origin_lat = 21.6214
-        origin_lon = 39.1989
-        base_speed_kmh = 60
-
-    # 1. حساب المسافة الرياضية
-    distance_km = haversine_distance(origin_lat, origin_lon, dest_lat, dest_lon)
-    
-    # 2. حساب الوقت الأساسي (بالدقائق)
-    base_time_mins = (distance_km / base_speed_kmh) * 60
-    
-    # 3. مصفوفة الزحام المروري (Traffic Matrix) لمدينتي مكة وجدة
     now = get_makkah_time()
-    hour = now.hour
     
-    # تحليل أوقات الذروة
-    if 7 <= hour <= 9:
-        traffic_multiplier = 1.4 # زحمة الدوامات الصباحية
-    elif 13 <= hour <= 15:
-        traffic_multiplier = 1.6 # خروج المدارس
-    elif 17 <= hour <= 21:
-        traffic_multiplier = 1.8 # ذروة المساء (تأثير طريق المدينة والحرمين)
-    else:
-        traffic_multiplier = 1.1 # طريق سالك (ليل/فجر)
-        
-    # 4. الحساب النهائي مع إضافة 5 دقائق للمواقف
-    final_eta_mins = int(base_time_mins * traffic_multiplier) + 5
+    # حساب وقت الوصول
+    arrival_timeObj = now + timedelta(minutes=user_input_minutes)
     
-    return final_eta_mins, distance_km
+    now_str = now.strftime("%I:%M %p")
+    arr_str = arrival_timeObj.strftime("%I:%M %p")
+    
+    return now_str, arr_str, arrival_timeObj
 
 # =====================================================================
 # 6. EXPANDED BIOMECHANICS & EXERCISE DATABASE (هندسة التمارين)
@@ -356,8 +306,8 @@ def calculate_smart_eta(origin_name):
 # =====================================================================
 def get_exercise_database():
     """
-    قاعدة بيانات ميكانيكية حيوية ضخمة.
-    تحتوي على التمارين، العدات، ومناطق الألم الإيجابي والسلبي لكل تمرين.
+    قاعدة بيانات ميكانيكية حيوية ضخمة جداً.
+    تحتوي على التمارين، العدات الموصى بها، ومناطق الألم الإيجابي والسلبي.
     """
     db = {
         "صدر": [
@@ -373,7 +323,7 @@ def get_exercise_database():
                 "reps": "8-10 عدات", 
                 "target": "الكتلة الصدرية الشاملة", 
                 "good_pain": "منتصف الصدر", 
-                "bad_pain": "الرسغ أو الكوع (يجب تعديل زاوية القبضة)"
+                "bad_pain": "الرسغ أو الكوع (يجب تعديل زاوية القبضة للداخل قليلاً)"
             },
             {
                 "name": "Decline Cable Flys", 
@@ -662,17 +612,24 @@ def get_exercise_database():
     return db
 
 def get_exercise_names(muscle):
-    """إرجاع أسماء التمارين للقوائم المنسدلة بناءً على العضلة المختارة"""
+    """إرجاع أسماء التمارين للقوائم المنسدلة بناءً على العضلة المختارة مع إضافة خيار الإدخال اليدوي الذكي"""
     db = get_exercise_database()
-    if not muscle or muscle == "اذهب لسان هندسة الأسبوع": 
-        return [ex["name"] for ex in db["تمرين حر"]]
+    if not muscle or muscle == "اذهب لسان هندسة الأسبوع" or muscle == "راحة": 
+        return [ex["name"] for ex in db["تمرين حر"]] + ["➕ إدخال تمرين جديد (يدوي ذكي)"]
         
     names = []
     for k, v in db.items():
         if k in muscle: 
             names.extend([ex["name"] for ex in v])
             
-    return list(set(names)) if names else [ex["name"] for ex in db["تمرين حر"]]
+    if not names:
+        names = [ex["name"] for ex in db["تمرين حر"]]
+        
+    names = list(set(names))
+    names.sort()
+    names.append("➕ إدخال تمرين جديد (يدوي ذكي)")
+    
+    return names
 
 def get_exercise_details(ex_name):
     """إرجاع تفاصيل التمرين (العدات الموصى بها، أماكن الألم)"""
@@ -682,19 +639,20 @@ def get_exercise_details(ex_name):
             if ex["name"] == ex_name:
                 return ex
                 
+    # القيمة الافتراضية للتمرين اليدوي أو غير المعروف
     return {
         "name": ex_name, 
-        "reps": "10-12 عدة", 
-        "target": "تمرين شامل", 
-        "good_pain": "بطن العضلة المستهدفة", 
-        "bad_pain": "ألم المفاصل والأربطة"
+        "reps": "10-12 عدة (معدل تضخيم أساسي)", 
+        "target": "حسب استهدافك للتمرين", 
+        "good_pain": "شد في بطن العضلة التي تمرنها", 
+        "bad_pain": "ألم حاد في المفاصل أو الأربطة المجاورة"
     }
 
 # =====================================================================
 # 7. AI REP IMPUTATION (خوارزمية حساب العدات الذكية)
 # =====================================================================
 def fetch_historical_data(exercise_name):
-    """جلب تاريخ آخر جلسة تمرين لغرض التحليل والتطوير"""
+    """جلب تاريخ آخر جلسة تمرين لغرض التحليل والتطوير (Progressive Overload)"""
     df = fetch_sheet_safe("Workout_Logs")
     if not df.empty and 'Exercise' in df.columns:
         past_logs = df[df['Exercise'] == exercise_name]
@@ -762,76 +720,66 @@ def get_nutrition_databases():
     return edaam_db, fast_food_db
 
 # =====================================================================
-# 9. WORKOUT STRATEGY & BALANCE LOGIC (المحرك الاستراتيجي والتوازن)
+# 9. CLINICAL RECOVERY PROTOCOLS (البروتوكولات الطبية والعلاج التبايني)
+# =====================================================================
+def get_recovery_protocol(is_high_intensity):
+    """
+    يحدد بروتوكول الاستشفاء الدقيق بناءً على المجهود.
+    العلاج التبايني مفصل بالدقيقة بناء على الأبحاث الرياضية لتجنب تدمير الخصوبة.
+    """
+    if is_high_intensity:
+        protocol_html = """
+        <div class='fertility-warning'>
+            <h4 style='color:#FF4136; margin:0;'>🔥 بروتوكول العلاج التبايني (Contrast Water Therapy)</h4>
+            <p style='font-size: 16px; margin-top:10px;'>الجهد اليوم عالي جداً (تراكم هائل لحمض اللاكتيك). اتبع هذه الدورة بدقة لتوسيع وانقباض الأوعية الدموية:</p>
+            <ul style='font-size: 15px;'>
+                <li><b>الساونا الجافة (Dry Sauna):</b> من 5 إلى 7 دقائق (للتعرق وطرد السموم).</li>
+                <li><b>غرفة البخار (Steam Room):</b> 3 دقائق متواصلة (لتوسيع الأوعية).</li>
+                <li><b>الغطس البارد (Cold Plunge/Jacuzzi):</b> 1 إلى 2 دقيقة متواصلة.</li>
+                <li><i>كرر دورة (حار-بارد) 3 مرات.</i></li>
+                <li><b>⚠️ تحذير الخصوبة الإلزامي:</b> يجب أن تُنهي دورتك في النادي <b>بالماء البارد جداً وتخرج فوراً</b> لخفض حرارة الخصيتين والحفاظ على إنتاج الحيوانات المنوية والتستوستيرون.</li>
+            </ul>
+        </div>
+        """
+    else:
+        protocol_html = """
+        <div class='fertility-safe'>
+            <h4 style='color:#2ECC40; margin:0;'>🛡️ بروتوكول التبريد العميق (حظر حراري)</h4>
+            <p style='font-size: 16px; margin-top:10px;'>اليوم مخصص لتمارين الأجزاء العلوية أو راحة. لا تحتاج للعلاج التبايني العنيف.</p>
+            <ul style='font-size: 15px;'>
+                <li><b>السباحة الهادئة:</b> 15 دقيقة لفكفكة المفاصل بهدوء وبدون ضغط.</li>
+                <li><b>الجاكوزي البارد:</b> 3 إلى 5 دقائق متواصلة لتقليل الالتهابات ورفع التستوستيرون.</li>
+                <li><b>يُمنع الدخول للساونا أو البخار اليوم</b> لمنع الإجهاد الحراري التراكمي وتوفير طاقة الجهاز العصبي.</li>
+            </ul>
+        </div>
+        """
+    return protocol_html
+
+# =====================================================================
+# 10. WORKOUT STRATEGY & BALANCE LOGIC (المحرك الاستراتيجي والتوازن)
 # =====================================================================
 CLASS_BURN_DB = {
     "موتيف 8": 450, "فت كومبات": 650, "كور اكستريم": 350,
     "ستيب": 450, "اكوا": 350, "بامب فت": 400,
     "بودي ماكس": 600, "رادير": 300, "جي فت": 400,
-    "فت اتاك": 600, "موبيلتي": 200, "لا يوجد": 0
+    "فت اتاك": 600, "موبيلتي": 200, "لا يوجد": 0,
+    "راحة / غياب": 0
 }
 
 WORKOUT_ENGINE = {
-    "موتيف 8": {
-        "iron": "صدر + تراي", 
-        "warmup": "دوران أكتاف 3 دق + إطالة صدر 2 دق", 
-        "flow": "الصدر يحتاج تركيز عالي. ابدأ بـ Incline Press لشد الصدر العلوي أولاً."
-    },
-    "فت كومبات": {
-        "iron": "أرجل + بطن", 
-        "warmup": "إطالة ديناميكية للحوض والركب", 
-        "flow": "يوم حرق الدهون العظيم! ابدأ بالسكوات الثقيل ولا تتنازل عن الأوزان."
-    },
-    "كور اكستريم": {
-        "iron": "أكتاف + جوانب", 
-        "warmup": "تسخين جذع مركزي + دوران خصر", 
-        "flow": "أكتاف عريضة = خصر أنحف بصرياً. ركز على Overhead Press للكتلة."
-    },
-    "ستيب": {
-        "iron": "ظهر + باي", 
-        "warmup": "إطالة قطنية أسفل الظهر + سحب حبل مطاطي", 
-        "flow": "شد الظهر يمنع التحدب. ركز على Deadlift و Lat Pulldown للتعريض."
-    },
-    "اكوا": {
-        "iron": "حديد شامل (Full Body)", 
-        "warmup": "إحماء مفاصل شامل من الرقبة للكاحل", 
-        "flow": "اختر تمرين مركب واحد لكل عضلة كبيرة (بنش، سكوات، سحب)."
-    },
-    "بامب فت": {
-        "iron": "صدر + أكتاف", 
-        "warmup": "تسخين أكتاف بوزن خفيف 2.5 كيلو", 
-        "flow": "أوزان متوسطة وتكرارات عالية للـ Pump وضخ الدم بقوة للألياف."
-    },
-    "بودي ماكس": {
-        "iron": "أرجل + ظهر", 
-        "warmup": "سكوات وزن الجسم 20 عدة", 
-        "flow": "أعنف يوم! يستهدف أكبر عضلتين لنسف الكرش. حافظ على طاقتك."
-    },
-    "رادير": {
-        "iron": "ذراعين (باي وتراي)", 
-        "warmup": "إطالة أوتار الرسغ ببطء شديد", 
-        "flow": "Supersets باي مع تراي بشكل متتالي لزيادة الحرق واختصار وقت النادي."
-    },
-    "جي فت": {
-        "iron": "حديد قوة (Heavy Lift)", 
-        "warmup": "تسخين مفاصل مكثف جداً لتفادي الإصابة", 
-        "flow": "3 إلى 5 عدات بأقصى وزن حر. راحة 3 دقائق كاملة بين الجولات."
-    },
-    "فت اتاك": {
-        "iron": "أرجل + أكتاف", 
-        "warmup": "هرولة خفيفة 3 دق + قفز", 
-        "flow": "تمارين مركبة سريعة لرفع نبض القلب وزيادة معدل الحرق الأيضي."
-    },
-    "موبيلتي": {
-        "iron": "تمرين حر (النقاط الضعيفة)", 
-        "warmup": "استخدام الـ Foam Roller ببطء", 
-        "flow": "استهدف عضلة متأخرة وضعيفة، أو قم بجلسة إطالات عميقة للتعافي."
-    },
-    "لا يوجد": {
-        "iron": "تمرين حر متكامل", 
-        "warmup": "سير مائل 10 دق", 
-        "flow": "أنت القائد اليوم. صمم روتينك بناءً على مستوى طاقتك."
-    }
+    "موتيف 8": {"iron": "صدر + تراي", "warmup": "دوران أكتاف 3 دق + إطالة صدر 2 دق", "flow": "الصدر يحتاج تركيز عالي. ابدأ بـ Incline Press لشد الصدر العلوي أولاً."},
+    "فت كومبات": {"iron": "أرجل + بطن", "warmup": "إطالة ديناميكية للحوض والركب", "flow": "يوم حرق الدهون العظيم! ابدأ بالسكوات الثقيل ولا تتنازل عن الأوزان."},
+    "كور اكستريم": {"iron": "أكتاف + جوانب", "warmup": "تسخين جذع مركزي + دوران خصر", "flow": "أكتاف عريضة = خصر أنحف بصرياً. ركز على Overhead Press للكتلة."},
+    "ستيب": {"iron": "ظهر + باي", "warmup": "إطالة قطنية أسفل الظهر + سحب حبل مطاطي", "flow": "شد الظهر يمنع التحدب. ركز على Deadlift و Lat Pulldown للتعريض."},
+    "اكوا": {"iron": "حديد شامل (Full Body)", "warmup": "إحماء مفاصل شامل من الرقبة للكاحل", "flow": "اختر تمرين مركب واحد لكل عضلة كبيرة (بنش، سكوات، سحب)."},
+    "بامب فت": {"iron": "صدر + أكتاف", "warmup": "تسخين أكتاف بوزن خفيف 2.5 كيلو", "flow": "أوزان متوسطة وتكرارات عالية للـ Pump وضخ الدم بقوة للألياف."},
+    "بودي ماكس": {"iron": "أرجل + ظهر", "warmup": "سكوات وزن الجسم 20 عدة", "flow": "أعنف يوم! يستهدف أكبر عضلتين لنسف الكرش. حافظ على طاقتك."},
+    "رادير": {"iron": "ذراعين (باي وتراي)", "warmup": "إطالة أوتار الرسغ ببطء شديد", "flow": "Supersets باي مع تراي بشكل متتالي لزيادة الحرق واختصار وقت النادي."},
+    "جي فت": {"iron": "حديد قوة (Heavy Lift)", "warmup": "تسخين مفاصل مكثف جداً لتفادي الإصابة", "flow": "3 إلى 5 عدات بأقصى وزن حر. راحة 3 دقائق كاملة بين الجولات."},
+    "فت اتاك": {"iron": "أرجل + أكتاف", "warmup": "هرولة خفيفة 3 دق + قفز", "flow": "تمارين مركبة سريعة لرفع نبض القلب وزيادة معدل الحرق الأيضي."},
+    "موبيلتي": {"iron": "تمرين حر (النقاط الضعيفة)", "warmup": "استخدام الـ Foam Roller ببطء", "flow": "استهدف عضلة متأخرة وضعيفة، أو قم بجلسة إطالات عميقة للتعافي."},
+    "لا يوجد": {"iron": "تمرين حر متكامل", "warmup": "سير مائل 10 دق", "flow": "أنت القائد اليوم. صمم روتينك بناءً على مستوى طاقتك."},
+    "راحة / غياب": {"iron": "راحة", "warmup": "لا يوجد", "flow": "استشفاء سلبي"}
 }
 
 def analyze_muscle_balance(plan_df):
@@ -847,7 +795,7 @@ def analyze_muscle_balance(plan_df):
     if "ظهر" not in all_muscles: 
         alerts.append("🔴 خلل في القوام: يجب تدريب الظهر لسحب الأكتاف وتصحيح انحناء العمود الفقري.")
     if all_muscles.count("صدر") > 2: 
-        alerts.append("🔴 إجهاد مفرط: الصدر مستهدف بكثافة عالية جداً، هذا سيؤدي لتمزق الأنسجة وعدم استشفائها.")
+        alerts.append("🔴 إجهاد مفرط: الصدر مستهدف بكثافة عالية جداً، هذا سيؤدي للهدم العضلي.")
         
     if len(alerts) > 0: 
         return False, "<br>".join(alerts)
@@ -867,10 +815,48 @@ def get_week_dates():
     return week_dates
 
 # =====================================================================
-# 10. MAIN DASHBOARD INTERFACE (The Commander View)
+# 11. GLOBAL DIAGNOSTIC SWEEPER (مركز الصيانة الذكي والشامل)
+# =====================================================================
+def run_global_diagnostics():
+    """
+    يقوم بالدوران (Sweeping) على جميع مكونات التطبيق وقاعدة البيانات.
+    يتحقق من الاتصال، والأوراق المطلوبة، وسلامة الهيكل التنظيمي للبيانات.
+    """
+    diagnostics_report = []
+    
+    # 1. فحص الاتصال بالخادم
+    conn = get_db_connection()
+    if not conn:
+        diagnostics_report.append({"status": "error", "message": "🔴 انقطاع في الاتصال بقاعدة بيانات جوجل شيتس. تأكد من إعدادات Secrets في Streamlit."})
+        return diagnostics_report
+    else:
+        diagnostics_report.append({"status": "success", "message": "🟢 الاتصال بخوادم Google Cloud ممتاز (Service Account Active)."})
+
+    # 2. فحص الأوراق المطلوبة (Sheets Integrity)
+    required_sheets = ["Weekly_Plan", "Workout_Logs", "Health_Log", "InBody_Logs"]
+    missing_sheets = []
+    
+    for sheet in required_sheets:
+        try:
+            df = conn.read(worksheet=sheet, ttl="0s")
+            diagnostics_report.append({"status": "success", "message": f"🟢 ورقة العمل `{sheet}` موجودة وجاهزة للقراءة/الكتابة."})
+        except Exception as e:
+            missing_sheets.append(sheet)
+            diagnostics_report.append({"status": "error", "message": f"🔴 ورقة العمل `{sheet}` غير موجودة أو الصلاحيات تمنع الوصول إليها. الخطأ التقني: {str(e)}"})
+
+    if missing_sheets:
+        diagnostics_report.append({"status": "info", "message": f"ℹ️ يرجى فتح ملف الإكسل وإنشاء (Tabs) سفلية بهذه الأسماء بالضبط: {', '.join(missing_sheets)}"})
+    else:
+        diagnostics_report.append({"status": "success", "message": "🟢 الهيكل المعماري لقاعدة البيانات مكتمل وسليم 100%."})
+
+    return diagnostics_report
+
+# =====================================================================
+# 12. MAIN DASHBOARD INTERFACE (The Commander View)
 # الواجهة الأساسية التي تضم جميع الألسنة والنوافذ
 # =====================================================================
 def main():
+    # تهيئة المتغيرات لضمان التزامن
     initialize_session_states()
     
     makkah_now = get_makkah_time()
@@ -882,12 +868,12 @@ def main():
     current_date = makkah_now.strftime("%Y-%m-%d")
     week_dates = get_week_dates()
 
-    st.markdown("<h1>👑 محرك تايتان V25 (The Enterprise Monolith)</h1>", unsafe_allow_html=True)
+    st.markdown("<h1>👑 محرك تايتان V26 (The Synchronized AI Architect)</h1>", unsafe_allow_html=True)
     st.markdown(f"<p style='text-align:center; color:#888;'>المنطقة: مكة المكرمة | اليوم: {today_ar} ({current_date}) | الساعة الآن: {makkah_now.strftime('%I:%M %p')}</p>", unsafe_allow_html=True)
 
     tabs = st.tabs([
         "🚀 الملاحة الميدانية (GPS Engine)", 
-        "🗓️ هندسة الأسبوع", 
+        "🗓️ هندسة الأسبوع الذكية", 
         "🏋️ السجل وتتبع الألم (DOMS)", 
         "📸 عيادة InBody", 
         "🥗 وقود و Vision AI", 
@@ -899,7 +885,7 @@ def main():
     # TAB 1: OPERATIONS & INTERACTIVE ROUTING ENGINE
     # -----------------------------------------------------------------
     with tab_ops:
-        if today_ar == "الجمعة":
+        if today_ar == "الجمعة" and st.session_state['attendance_mode'] != "IronOnly":
             st.markdown(
                 """
                 <div class='titan-card titan-card-center' style='border: 2px solid #2ECC40;'>
@@ -921,34 +907,35 @@ def main():
                 except Exception: 
                     pass
 
-            if st.session_state['attendance_mode'] == "Absent":
+            if st.session_state['attendance_mode'] == "Absent" or s_class == "راحة / غياب":
                 st.markdown(
                     f"""
                     <div class='titan-card' style='border-color: #FF4136;'>
-                        <h2 style='color:#FF4136; text-align:center;'>تم تسجيل الغياب التام اليوم ❌</h2>
+                        <h2 style='color:#FF4136; text-align:center;'>مجدول كـ (راحة / غياب) ❌</h2>
                         <p style='text-align:center; font-size:18px;'>النظام قام بترحيل تمرين <b>({iron_target})</b> ليوم غد للتعويض.</p>
                         <hr style='border-color:#333;'>
                         <h4 style='color:#E0E0E0; text-align:center;'>بروتوكول التغذية الطارئ</h4>
-                        <p style='text-align:center;'>لا يوجد حرق طاقة اليوم. يُمنع تناول الكربوهيدرات في العشاء نهائياً.</p>
+                        <p style='text-align:center;'>لا يوجد حرق طاقة عالي اليوم. قلل الكربوهيدرات بشكل كبير.</p>
                     </div>
                     """, unsafe_allow_html=True)
-                if st.button("🔄 التراجع (قررت الذهاب للنادي)", use_container_width=True):
+                if st.button("🔄 التراجع (قررت الذهاب للنادي بشكل مفاجئ)", use_container_width=True):
                     st.session_state['attendance_mode'] = "Full"
                     st.rerun()
             else:
                 col_t1, col_t2 = st.columns([2, 1])
                 
                 with col_t2:
-                    st.markdown("<div class='titan-card titan-card-center'><h3 style='margin-top:0;'>📍 محرك الملاحة الداخلي</h3>", unsafe_allow_html=True)
-                    st.info("يتم حساب المسافة بمعادلة Haversine وتطبيق مصفوفة زحام (جدة/مكة).")
+                    st.markdown("<div class='titan-card titan-card-center'><h3 style='margin-top:0;'>📍 حاسبة الانطلاق التفاعلية</h3>", unsafe_allow_html=True)
+                    st.info("لتجاوز أي تقديرات غير دقيقة للـ GPS، اضغط على الرابط المناسب ليفتح لك خرائط جوجل في جوالك:")
                     
-                    user_loc = st.selectbox("أين أنت الآن؟", [
-                        "المنزل (جدة - المروة)", 
-                        "العمل (جدة)", 
-                        "العمل (مكة المكرمة)"
-                    ], index=["المنزل (جدة - المروة)", "العمل (جدة)", "العمل (مكة المكرمة)"].index(st.session_state['selected_origin_loc']))
+                    # روابط تفاعلية تفتح خرائط جوجل
+                    st.link_button("🗺️ انطلاق من البيت (جدة - المروة)", "https://goo.gl/maps/FdKa2nxf7AShtSHg8")
+                    st.link_button("🗺️ انطلاق من الدوام (جدة)", "https://maps.app.goo.gl/wbaAT9CD9K8QxYLMA?g_st=aw")
+                    st.link_button("🗺️ انطلاق من الدوام (مكة)", "https://maps.app.goo.gl/KkMVQoPCJwpzNBDS7?g_st=aw")
                     
-                    st.session_state['selected_origin_loc'] = user_loc
+                    st.info("بعد أن يخبرك جوجل ماب بمدة الطريق الحقيقية الآن، اكتبها هنا لحساب الجدول الزمني:")
+                    gps_mins = st.number_input("الدقائق للوصول (من خرائط جوجل):", min_value=1, max_value=180, value=st.session_state['gps_minutes'], step=1)
+                    st.session_state['gps_minutes'] = gps_mins
                     
                     st.markdown("<hr style='border-color:#333;'>", unsafe_allow_html=True)
                     st.markdown("<h3 style='margin-top:0;'>🕹️ التحكم الميداني</h3>", unsafe_allow_html=True)
@@ -962,7 +949,7 @@ def main():
                     if st.button("🤸 كلاس فقط (إلغاء الحديد)", use_container_width=True):
                         st.session_state['attendance_mode'] = "ClassOnly"
                         st.rerun()
-                    if st.button("⏳ تأخير المسار (زحمة غير متوقعة)", use_container_width=True):
+                    if st.button("⏳ تأخير مسار (زحمة غير متوقعة)", use_container_width=True):
                         st.session_state['attendance_mode'] = "Delayed"
                         st.rerun()
                     if st.button("❌ غياب تام عن النادي", use_container_width=True):
@@ -971,31 +958,23 @@ def main():
                     st.markdown("</div>", unsafe_allow_html=True)
 
                 with col_t1:
-                    # استدعاء محرك الملاحة الرياضي
-                    commute_mins, distance_km = calculate_smart_eta(user_loc)
-                    
-                    arr_timeObj = makkah_now + timedelta(minutes=commute_mins)
-                    arr_str = arr_timeObj.strftime("%I:%M %p")
-                    now_str = makkah_now.strftime("%I:%M %p")
+                    now_str, arr_str, arr_timeObj = get_dynamic_schedule(st.session_state['attendance_mode'], gps_mins)
                     class_burn = CLASS_BURN_DB.get(s_class, 0)
                     
                     if st.session_state['attendance_mode'] == "Full":
                         iron_start = (arr_timeObj + timedelta(minutes=10)).strftime("%I:%M %p")
                         nav_html = f"""
                         <div class='titan-card'>
-                            <h3 style='margin-top:0;'>🗺️ الخطة أ (طاقة قصوى - كلاس وحديد)</h3>
+                            <h3 style='margin-top:0;'>🗺️ الخطة أ (الكمال الهندسي: كلاس وحديد)</h3>
                             <p style='font-size:18px;'>الحديد المستهدف: <b style='color:#FFD700;'>{iron_target}</b> | الكلاس المجدول: <b style='color:#FFD700;'>{s_class}</b> <span style='color:#FF4136; font-size:14px;'>(حرق ~{class_burn} kcal)</span></p>
                             <p style='color:#888;'>الاستراتيجية المتبعة: {t_flow}</p>
                             <hr style='border-color: rgba(255,255,255,0.1);'>
-                            <p>🚗 الانطلاق من {user_loc}: <b style='color:#D4AF37;'>{now_str}</b></p>
-                            <p>📏 المسافة الرياضية: <b style='color:#D4AF37;'>{distance_km:.1f} KM</b> | ⏱️ الوقت المقدر بالزحام: <b style='color:#D4AF37;'>{commute_mins} دقيقة</b></p>
-                            <p>🅿️ الوصول المتوقع للنادي: <b style='color:#D4AF37;'>{arr_str}</b></p>
-                            <br>
+                            <p>🚗 الانطلاق حسب جوجل ماب: <b style='color:#D4AF37;'>{now_str}</b> | 🅿️ الوصول المتوقع للنادي: <b style='color:#D4AF37;'>{arr_str}</b></p>
                             <h5 style='color:#E0E0E0;'>الجدول الميداني التفاعلي لإنهاء التمرين قبل الإغلاق 11:00 م</h5>
                             <p>🔥 {arr_str} - {iron_start} : إحماء مفاصل وتجهيز ({warmup})</p>
                             <p>💪 {iron_start} - 09:00 PM : <b style='color:#FF4136;'>صالة الحديد (كسر أوزان حرة بأقصى طاقة قبل استنزاف الجلايكوجين)</b></p>
                             <p>🤸 09:00 PM - 09:50 PM : <b style='color:#D4AF37;'>الكلاس (لحرق دهون البطن والمؤخرة بشكل صافي)</b></p>
-                            <p>🧊 10:00 PM - 10:20 PM : <b style='color:#2ECC40;'>الاستشفاء قبل الإغلاق</b></p>
+                            <p>🧊 10:00 PM - 10:20 PM : <b style='color:#2ECC40;'>الاستشفاء والعلاج التبايني</b></p>
                         </div>
                         """
                     elif st.session_state['attendance_mode'] == "IronOnly":
@@ -1006,7 +985,7 @@ def main():
                             <p style='font-size:18px;'>الحديد المستهدف اليوم: <b style='color:#FFD700;'>{iron_target}</b></p>
                             <p style='color:#888;'>بما أن الكلاس تم إلغاؤه، لديك طاقة أعلى لكسر الأوزان الحرة وبناء الكتلة.</p>
                             <hr style='border-color: rgba(255,255,255,0.1);'>
-                            <p>🚗 الانطلاق من {user_loc}: <b style='color:#D4AF37;'>{now_str}</b> | 🅿️ وصول المواقف: <b style='color:#D4AF37;'>{arr_str}</b></p>
+                            <p>🚗 الانطلاق: <b style='color:#D4AF37;'>{now_str}</b> | 🅿️ وصول المواقف: <b style='color:#D4AF37;'>{arr_str}</b></p>
                             <h5 style='color:#E0E0E0;'>الجدول الميداني المفتوح</h5>
                             <p>🔥 {arr_str} - {iron_start} : إحماء دقيق لتفادي الإصابة ({warmup})</p>
                             <p>💪 {iron_start} - 10:30 PM : <b style='color:#FF4136;'>صالة الحديد (خذ وقتك، العب جولات إضافية، وتحدى أوزانك القديمة)</b></p>
@@ -1017,10 +996,11 @@ def main():
                         nav_html = f"""
                         <div class='titan-card' style='border-color: #D4AF37;'>
                             <h3 style='margin-top:0; color:#D4AF37;'>🤸 مسار الكارديو واللياقة</h3>
-                            <p style='font-size:18px;'>الكلاس: <b style='color:#FFD700;'>{s_class}</b> (تم إلغاء الحديد)</p>
+                            <p style='font-size:18px;'>الكلاس: <b style='color:#FFD700;'>{s_class}</b> (تم إلغاء صالة الحديد)</p>
                             <hr style='border-color: rgba(255,255,255,0.1);'>
-                            <p>🚗 الانطلاق من {user_loc}: <b style='color:#D4AF37;'>{now_str}</b> | 🅿️ الوصول للنادي: <b style='color:#D4AF37;'>{arr_str}</b></p>
+                            <p>🚗 الانطلاق: <b style='color:#D4AF37;'>{now_str}</b> | 🅿️ الوصول للنادي: <b style='color:#D4AF37;'>{arr_str}</b></p>
                             <p>🤸 09:00 PM - 09:50 PM : <b style='color:#D4AF37;'>الكلاس (حرق ~{class_burn} kcal)</b></p>
+                            <p>🧊 10:00 PM - 10:20 PM : <b style='color:#2ECC40;'>استشفاء مائي سريع</b></p>
                         </div>
                         """
                     else: # Delayed
@@ -1036,55 +1016,46 @@ def main():
                         """
                     st.markdown(nav_html, unsafe_allow_html=True)
 
-                st.markdown("### 🧊 البروتوكول الطبي (إلزامي)")
-                if today_ar in ["الاثنين", "الخميس"] or "أرجل" in iron_target:
-                    st.markdown(
-                        """
-                        <div class='fertility-warning'>
-                            <h4 style='color:#FF4136; margin:0;'>🔥 بروتوكول العلاج التبايني (Contrast Therapy) العنيف</h4>
-                            <p style='font-size: 16px; margin-top:10px;'>بما أن اليوم يتضمن مجهوداً عالياً (أو أرجل)، يجب تطبيق التالي لدفع حمض اللاكتيك خارج العضلات:</p>
-                            <ul style='font-size: 15px;'>
-                                <li><b>الجاكوزي الحار/بخار:</b> 3 دقائق متواصلة لتوسيع الأوعية الدموية.</li>
-                                <li><b>الجاكوزي البارد:</b> 1 دقيقة متواصلة للانقباض السريع.</li>
-                                <li><i>كرر الدورة 3 مرات.</i></li>
-                                <li><b>تحذير الخصوبة:</b> يجب أن تنهي الدورة بالماء البارد جداً وتخرج فوراً لحماية هرمونات الذكورة.</li>
-                            </ul>
-                        </div>
-                        """, unsafe_allow_html=True)
-                else:
-                    st.markdown(
-                        """
-                        <div class='fertility-safe'>
-                            <h4 style='color:#2ECC40; margin:0;'>🛡️ بروتوكول التبريد العميق (حظر حراري)</h4>
-                            <p style='font-size: 16px; margin-top:10px;'>اليوم مخصص لتمارين الأجزاء العلوية أو راحة.</p>
-                            <ul style='font-size: 15px;'>
-                                <li><b>السباحة الهادئة:</b> 15 دقيقة لفكفكة المفاصل بهدوء.</li>
-                                <li><b>الجاكوزي البارد:</b> 3 إلى 5 دقائق متواصلة لتقليل الالتهابات ورفع التستوستيرون.</li>
-                                <li><b>يُمنع الدخول للحرارة العالية اليوم</b> لمنع الإجهاد الحراري التراكمي.</li>
-                            </ul>
-                        </div>
-                        """, unsafe_allow_html=True)
+                st.markdown("### 🧊 البروتوكول الطبي المفصل للاستشفاء")
+                is_heavy_day = today_ar in ["الاثنين", "الخميس"] or "أرجل" in iron_target or st.session_state['attendance_mode'] == "IronOnly"
+                protocol_html = get_recovery_protocol(is_heavy_day)
+                st.markdown(protocol_html, unsafe_allow_html=True)
 
     # -----------------------------------------------------------------
-    # TAB 2: WEEKLY PLAN
+    # TAB 2: WEEKLY PLAN (Synchronized Architect Logic)
     # -----------------------------------------------------------------
     with tab_setup:
-        st.markdown("### 🗓️ بناء المخطط الأسبوعي وتوازن العضلات")
+        st.markdown("### 🗓️ بناء المخطط الأسبوعي (متزامن سحابياً)")
+        st.info("هذا المخطط يسحب بياناته من جوجل شيتس لتكون الأيام منسقة بين الجوال واللابتوب. تم إضافة خيار الغياب.")
         week_days_ordered = ["السبت", "الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس"]
+        
+        # جلب المخطط الحالي لتعيين القيم الافتراضية
+        plan_df = fetch_sheet_safe("Weekly_Plan")
+        current_plan_dict = {}
+        if not plan_df.empty and 'Day' in plan_df.columns and 'Class' in plan_df.columns:
+            for _, row in plan_df.iterrows():
+                current_plan_dict[row['Day']] = row['Class']
         
         with st.form("weekly_master_plan"):
             new_schedule = []
             cols = st.columns(3)
+            class_options = list(WORKOUT_ENGINE.keys())
+            
             for i, d in enumerate(week_days_ordered):
                 exact_date = week_dates.get(d, "")
+                default_class = current_plan_dict.get(d, "موتيف 8") # افتراضي
+                
+                try: default_index = class_options.index(default_class)
+                except ValueError: default_index = 0
+                
                 with cols[i % 3]:
                     st.markdown(f"<h5 style='color:#E0E0E0; text-align:right;'>{d}<br><span style='font-size:12px; color:#888;'>{exact_date}</span></h5>", unsafe_allow_html=True)
-                    choice = st.selectbox("الكلاس", list(WORKOUT_ENGINE.keys()), key=f"conf_{d}", label_visibility="collapsed")
+                    choice = st.selectbox("الكلاس", class_options, index=default_index, key=f"conf_{d}", label_visibility="collapsed")
                     muscle_target = WORKOUT_ENGINE[choice]['iron']
                     new_schedule.append({"Day": d, "Date": exact_date, "Class": choice, "Muscle": muscle_target, "Status": "مجدول"})
             
             st.markdown("<hr>", unsafe_allow_html=True)
-            if st.form_submit_button("✅ فحص هندسي واعتماد المخطط", use_container_width=True):
+            if st.form_submit_button("✅ فحص هندسي واعتماد المخطط في السحابة", use_container_width=True):
                 df_new_plan = pd.DataFrame(new_schedule)
                 is_balanced, balance_msg = analyze_muscle_balance(df_new_plan)
                 box_class = 'success-box' if is_balanced else 'alert-box'
@@ -1102,14 +1073,14 @@ def main():
         
         # Pre-Workout Check
         st.markdown("<div class='titan-card' style='text-align:right;'><h4 style='margin-top:0;'>🚦 التقييم قبل التمرين (Pre-Workout Check)</h4>", unsafe_allow_html=True)
-        st.session_state['pre_workout_pain'] = st.selectbox("كيف تشعر بجسمك اليوم قبل الذهاب للنادي؟", [
+        st.session_state['pre_workout_pain'] = st.selectbox("كيف تشعر بجسمك اليوم قبل البدء؟", [
             "سليم 100% وجاهز لكسر الأوزان",
             "إرهاق عام وعضلات مشدودة (DOMS من الأمس)",
             "ألم خفيف في أحد المفاصل (ركبة، كوع، رسغ)",
             "ألم حاد في أسفل الظهر أو الكتف الداخلي (خطر)"
         ])
         if "المفاصل" in st.session_state['pre_workout_pain'] or "خطر" in st.session_state['pre_workout_pain']:
-            st.warning("⚠️ بما أن هناك ألم في المفاصل/الظهر، يُمنع اليوم لعب الأوزان الحرة (Deadlift, Free Squat, Barbell Bench). استخدم الأجهزة ذات المسار الثابت فقط!")
+            st.warning("⚠️ بما أن هناك ألم في المفاصل/الظهر، يُمنع اليوم لعب الأوزان الحرة تماماً. استخدم الأجهزة ذات المسار الثابت فقط!")
         st.markdown("</div>", unsafe_allow_html=True)
 
         todays_muscle = "اذهب لسان هندسة الأسبوع"
@@ -1140,12 +1111,19 @@ def main():
         with c_timer2:
             st.markdown(f"<div class='titan-card' style='text-align:right;'><h4 style='margin-top:0;'>العضلة المستهدفة اليوم: <span style='color:#FFD700;'>{todays_muscle}</span></h4>", unsafe_allow_html=True)
             available_exercises = get_exercise_names(todays_muscle)
-            selected_ex = st.selectbox("اختر التمرين من قاعدة البيانات لتسجيله:", available_exercises)
+            selected_ex = st.selectbox("اختر التمرين للتسجيل:", available_exercises)
             
-            ex_details = get_exercise_details(selected_ex)
+            # منطق الإدخال اليدوي الذكي للتمرين
+            if selected_ex == "➕ إدخال تمرين جديد (يدوي ذكي)":
+                custom_ex_name = st.text_input("اكتب اسم التمرين الجديد (باللغة الإنجليزية للتوحيد):")
+                final_selected_ex = custom_ex_name if custom_ex_name else "تمرين مخصص"
+            else:
+                final_selected_ex = selected_ex
+                
+            ex_details = get_exercise_details(final_selected_ex)
             st.markdown(f"<p style='color:#888; font-size:14px;'>الهدف الميكانيكي: {ex_details['target']} | النطاق الموصى به: <b style='color:#2ECC40;'>{ex_details['reps']}</b></p>", unsafe_allow_html=True)
             
-            p_date, p_weight, p_reps = fetch_historical_data(selected_ex)
+            p_date, p_weight, p_reps = fetch_historical_data(final_selected_ex)
             if p_date:
                 st.markdown(f"<div style='background:#111; padding:10px; border-radius:8px; border-right:4px solid #D4AF37; margin-bottom:15px;'><p style='color:#888; margin:0;'>سابقاً ({p_date}): <b>{p_weight} KG</b> × {p_reps}</p></div>", unsafe_allow_html=True)
                 default_w = float(p_weight)
@@ -1154,36 +1132,39 @@ def main():
                 
             c_wt, c_rp = st.columns(2)
             input_wt = c_wt.number_input("الوزن (KG)", min_value=0.0, value=default_w, step=2.5)
-            input_rp = c_rp.number_input("العدات (اكتب 0 للحساب الآلي)", min_value=0, value=0, step=1)
+            input_rp = c_rp.number_input("العدات (اكتب 0 للحساب الآلي الذكي)", min_value=0, value=0, step=1)
             
             if st.button("💾 توثيق الجلسة في الإكسل", use_container_width=True):
-                final_reps = input_rp
-                if input_rp == 0:
-                    final_reps = calculate_smart_reps(selected_ex, input_wt)
-                    st.success(f"🤖 الذكاء الاصطناعي استنتج بناءً على وزنك السابق أنك حققت: {final_reps} عدات.")
-                    
-                new_entry = {"Date": current_date, "Muscle": todays_muscle, "Exercise": selected_ex, "Weight": input_wt, "Reps": final_reps}
-                success, s_msg = append_to_sheet_safe("Workout_Logs", new_entry)
-                if success: st.success(f"تم توثيق {selected_ex} بنجاح.")
-                else: st.error(s_msg)
+                if final_selected_ex == "تمرين مخصص" or final_selected_ex.strip() == "":
+                    st.error("الرجاء كتابة اسم التمرين اليدوي قبل الحفظ.")
+                else:
+                    final_reps = input_rp
+                    if input_rp == 0:
+                        final_reps = calculate_smart_reps(final_selected_ex, input_wt)
+                        st.success(f"🤖 الذكاء الاصطناعي استنتج بناءً على وزنك السابق أنك حققت: {final_reps} عدات.")
+                        
+                    new_entry = {"Date": current_date, "Muscle": todays_muscle, "Exercise": final_selected_ex, "Weight": input_wt, "Reps": final_reps}
+                    success, s_msg = append_to_sheet_safe("Workout_Logs", new_entry)
+                    if success: st.success(f"تم توثيق {final_selected_ex}.")
+                    else: st.error(s_msg)
             st.markdown("</div>", unsafe_allow_html=True)
             
         # Post-Workout DOMS Tracker
         st.markdown("#### 🤕 التقييم بعد التمرين (أو ثاني يوم - DOMS Analysis)")
         with st.form("doms_form"):
-            st.write(f"بناءً على تمرين [{selected_ex}] الذي اخترته:")
+            st.write(f"بناءً على تمرين [{final_selected_ex}] الذي اخترته:")
             st.markdown(f"<p style='font-size:14px;'><span class='good-pain'>✅ الألم الجيد يجب أن يكون في:</span> {ex_details['good_pain']}</p>", unsafe_allow_html=True)
             st.markdown(f"<p style='font-size:14px;'><span class='pain-zone'>❌ الألم السيء الذي يدل على إصابة/تكنيك خاطئ:</span> {ex_details['bad_pain']}</p>", unsafe_allow_html=True)
             
             doms_level = st.slider("مستوى الألم العضلي الذي تشعر به الآن (1 = لا يوجد، 10 = تمزق/إعاقة حركة):", 1, 10, 3)
             doms_loc = st.selectbox("أين يتركز الألم بشكل رئيسي؟", [
-                "في بطن العضلة المستهدفة (ألم تمدد طبيعي)", 
+                "في بطن العضلة المستهدفة (ألم تمدد طبيعي ممتاز)", 
                 "في المفاصل والأوتار المحيطة (خطر)", 
                 "في أسفل الظهر أو القطنية (تحذير جدي)", 
                 "في الرقبة أو الترابيس العلوية (تكنيك خاطئ)"
             ])
             
-            if st.form_submit_button("💾 حفظ حالة الاستشفاء في الإكسل"):
+            if st.form_submit_button("💾 حفظ حالة الاستشفاء"):
                 if "المفاصل" in doms_loc or "أسفل الظهر" in doms_loc:
                     st.error("⚠️ التقييم يؤكد أن التكنيك كان خاطئاً أو الوزن كان ثقيلاً جداً لدرجة أنك استعنت بمفاصلك لرفعه. راجع فيديوهات التكنيك فوراً أو خفف الوزن المرة القادمة.")
                 elif doms_level > 8:
@@ -1203,7 +1184,7 @@ def main():
             ib_muscle = c2.number_input("العضلات (KG)", value=40.0, step=0.1)
             ib_fat = c2.number_input("نسبة الدهون (%)", value=20.0, step=0.5)
             ib_visceral = st.number_input("الدهون الحشوية (الكرش - يجب أن تنزل تحت 10)", value=14, step=1)
-            if st.form_submit_button("💾 أرشفة التقرير", use_container_width=True):
+            if st.form_submit_button("💾 أرشفة التقرير في الإكسل", use_container_width=True):
                 inbody_data = {"Date": ib_date.strftime("%Y-%m-%d"), "Weight": ib_weight, "Muscle_Mass": ib_muscle, "Fat_Percentage": ib_fat, "Visceral_Fat": ib_visceral}
                 success, msg = append_to_sheet_safe("InBody_Logs", inbody_data)
                 if success: st.success("تم الحفظ في قاعدة البيانات بنجاح.")
@@ -1215,13 +1196,14 @@ def main():
     with tab_fuel:
         st.markdown("### 🥗 المساعد الغذائي (Macros & Meals)")
         
-        tab_f1, tab_f2, tab_f3 = st.tabs(["📸 تصوير الوجبة (AI)", "🍲 الإيدامات وطبخ البيت", "🍔 الوجبات السريعة"])
+        tab_f1, tab_f2, tab_f3 = st.tabs(["📸 تصوير الوجبة (AI)", "🍲 الإيدامات وطبخ البيت", "🍔 الوجبات السريعة والمطاعم"])
         
         edaam_db, fast_food_db = get_nutrition_databases()
         
         with tab_f1:
             st.markdown("<div class='titan-card titan-card-center'>", unsafe_allow_html=True)
             st.markdown("<h4>التعرف التلقائي على الماكروز عبر الصور</h4>", unsafe_allow_html=True)
+            st.warning("ملاحظة هندسية: هذه الأداة تتطلب ربط مفتاح Google Vision API لتعمل بشكل دائم. الواجهة الحالية هي محاكاة تفاعلية للذكاء الاصطناعي.")
             uploaded_meal = st.file_uploader("التقط صورة للوجبة", type=["jpg", "jpeg", "png"])
             if uploaded_meal:
                 st.image(uploaded_meal, use_container_width=True)
@@ -1240,7 +1222,7 @@ def main():
                 for meal in selected_edaam:
                     st.session_state['meal_protein'] += edaam_db[meal]["protein"]
                     st.session_state['meal_cals'] += edaam_db[meal]["cals"]
-                st.success("تم جمع القيم الغذائية بنجاح.")
+                st.success("تم جمع القيم الغذائية للإيدامات بنجاح.")
             st.markdown("</div>", unsafe_allow_html=True)
             
         with tab_f3:
@@ -1250,7 +1232,7 @@ def main():
                 for meal in selected_fast:
                     st.session_state['meal_protein'] += fast_food_db[meal]["protein"]
                     st.session_state['meal_cals'] += fast_food_db[meal]["cals"]
-                st.success("تم جمع القيم الغذائية بنجاح.")
+                st.success("تم جمع القيم الغذائية للوجبات الجاهزة بنجاح.")
                 
             st.markdown("<hr style='border-color:#333;'>", unsafe_allow_html=True)
             st.write("**إدخال يدوي مباشر (من المنيو):**")
@@ -1260,19 +1242,19 @@ def main():
             if st.button("➕ إضافة الإدخال اليدوي"):
                 st.session_state['meal_protein'] += man_prot
                 st.session_state['meal_cals'] += man_cal
-                st.success("تم جمع القيم الغذائية بنجاح.")
+                st.success("تم جمع القيم الغذائية اليدوية بنجاح.")
             st.markdown("</div>", unsafe_allow_html=True)
             
         # لوحة العداد المجمعة
         target_calories = 1900
-        protein_target = int(91.9 * 2.2) # الهدف: 2.2 جرام لكل كيلو من وزن الجسم لمنع الهدم
+        protein_target = int(91.9 * 2.2) 
         
         st.markdown(f"""
         <div class='titan-card'>
             <h4 style='margin-top:0; color:#D4AF37;'>🎯 العداد اللحظي للوقود (مقارنة بالهدف)</h4>
             <div style='display:flex; justify-content:space-around; margin-top:20px; align-items:center;'>
                 <div style='text-align:center;'>
-                    <span style='font-size:30px;'>🍖</span><br><span style='color:#E0E0E0; font-size:14px;'>بروتين (أساسي)</span><br>
+                    <span style='font-size:30px;'>🍖</span><br><span style='color:#E0E0E0; font-size:14px;'>بروتين (أساسي لمنع الهدم)</span><br>
                     <span class='macro-val' style='color:#FF4136;'>{st.session_state['meal_protein']} / {protein_target}g</span>
                 </div>
                 <div style='text-align:center;'>
@@ -1308,46 +1290,23 @@ def main():
                     st.error(s_msg)
 
     # -----------------------------------------------------------------
-    # TAB 6: SYSTEM MAINTENANCE & DIAGNOSTICS
+    # TAB 6: GLOBAL SYSTEM MAINTENANCE & DIAGNOSTICS SWEEPER
     # -----------------------------------------------------------------
     with tab_sys:
-        st.markdown("### 🛠️ التشخيص الهندسي اللحظي للاتصال")
-        st.info("النظام يقوم هنا باختبار استجابة خوادم جوجل وصلاحيات مفتاح Service Account.")
+        st.markdown("### 🛠️ التشخيص الهندسي الشامل للمحرك وقاعدة البيانات")
+        st.info("هذا القسم يمسح (Sweep) كل مكونات البرنامج للتأكد من جاهزيته للعمل 100%.")
         
-        if st.button("🔄 بدء الاختبار والفحص العميق", use_container_width=True):
-            with st.spinner('جاري التفاوض مع خوادم Google Cloud وفتح قنوات الاتصال...'):
-                time.sleep(1)
-                conn = get_db_connection()
-                if conn:
-                    try:
-                        conn.read(worksheet="Weekly_Plan", ttl="0s")
-                        st.markdown(
-                            """
-                            <div class='success-box'>
-                                <h3 style='margin:0;'>🟢 النظام مدرع ومتصل 100%.</h3>
-                                <p style='margin:0;'>صلاحيات الكتابة (Editor) تعمل، والتطبيق يتحدث مع قاعدة البيانات بشكل مثالي دون أي انقطاع.</p>
-                            </div>
-                            """, unsafe_allow_html=True
-                        )
-                    except Exception as e:
-                        st.markdown(
-                            f"""
-                            <div class='alert-box'>
-                                <h3 style='margin:0;'>🔴 الكتابة مرفوضة من جوجل</h3>
-                                <p style='margin:0;'>تم الاتصال بنجاح، لكن جوجل يمنع التعديل. تأكد أنك أضفت إيميل الروبوت (الموجود في ملف JSON) كـ "محرر" في زر المشاركة في الإكسل.</p>
-                                <p style='font-size:12px;'>التفاصيل التقنية للخطأ: {str(e)}</p>
-                            </div>
-                            """, unsafe_allow_html=True
-                        )
-                else:
-                    st.markdown(
-                        """
-                        <div class='alert-box'>
-                            <h3 style='margin:0;'>🔴 انقطاع تام في الشبكة</h3>
-                            <p style='margin:0;'>التطبيق لا يستطيع قراءة مفاتيح Secrets. راجع إعدادات Streamlit ولاحظ إذا كانت المسافات والنسخ صحيحاً.</p>
-                        </div>
-                        """, unsafe_allow_html=True
-                    )
+        if st.button("🔄 بدء الاختبار والفحص العميق للرادار", use_container_width=True):
+            with st.spinner('جاري التفاوض مع خوادم Google Cloud وفحص سلامة أوراق الإكسل...'):
+                time.sleep(1.5)
+                report = run_global_diagnostics()
+                for item in report:
+                    if item["status"] == "success":
+                        st.markdown(f"<div class='success-box'>{item['message']}</div>", unsafe_allow_html=True)
+                    elif item["status"] == "error":
+                        st.markdown(f"<div class='alert-box'>{item['message']}</div>", unsafe_allow_html=True)
+                    else:
+                        st.markdown(f"<div class='info-box'>{item['message']}</div>", unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
