@@ -10,7 +10,7 @@ import textwrap
 # 1. CORE ARCHITECTURE & SYSTEM INITIALIZATION
 # =====================================================================
 st.set_page_config(
-    page_title="Titan V29 - The Redemption Monolith", 
+    page_title="Titan V30 - The Final Masterpiece", 
     page_icon="👑", 
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -29,19 +29,14 @@ def get_makkah_time():
 # 2. ADVANCED FRONTEND ENGINEERING (CSS Architecture)
 # =====================================================================
 def inject_custom_css():
-    """
-    مكتبة التصميم الشاملة.
-    تم استخدام تدرجات ألوان OLED لتقليل استهلاك البطارية على الجوال.
-    """
+    """مكتبة التصميم الشاملة بتدرجات OLED لتقليل استهلاك البطارية"""
     css_code = """
     <style>
-        /* الإعدادات الأساسية والخلفية المظلمة لتقليل إجهاد العين */
         .stApp { 
             background-color: #050505; 
             color: #F0F0F0; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
         }
-        
         h1, h2, h3, h4, h5 { 
             color: #D4AF37 !important; 
             text-align: center; 
@@ -49,15 +44,12 @@ def inject_custom_css():
             letter-spacing: 1px; 
             margin-bottom: 15px;
         }
-        
-        /* تصميم الألسنة (Tabs) لتعمل كأزرار تحكم علوية */
         .stTabs [data-baseweb="tab-list"] { 
             gap: 8px; 
             justify-content: center; 
             margin-bottom: 30px; 
             flex-wrap: wrap; 
         }
-        
         .stTabs [data-baseweb="tab"] { 
             border: 2px solid #D4AF37; 
             background-color: #0A0A0A; 
@@ -68,15 +60,12 @@ def inject_custom_css():
             font-weight: bold; 
             transition: all 0.3s ease; 
         }
-        
         .stTabs [aria-selected="true"] { 
             background-color: #D4AF37 !important; 
             color: #000000 !important; 
             box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); 
             transform: scale(1.05); 
         }
-        
-        /* البطاقات الاحترافية (Cards) */
         .titan-card { 
             background: linear-gradient(145deg, #11151A, #080A0F); 
             border: 1px solid rgba(212, 175, 55, 0.2); 
@@ -86,12 +75,7 @@ def inject_custom_css():
             text-align: right; 
             box-shadow: 0 15px 25px rgba(0,0,0,0.8); 
         }
-        
-        .titan-card-center { 
-            text-align: center; 
-        }
-        
-        /* الأرقام الحيوية */
+        .titan-card-center { text-align: center; }
         .gold-value { 
             color: #FFD700; 
             font-size: 40px; 
@@ -99,68 +83,12 @@ def inject_custom_css():
             margin: 15px 0; 
             text-shadow: 0px 0px 10px rgba(212, 175, 55, 0.3); 
         }
-        
-        /* بروتوكولات الاستشفاء الطبي (Medical Recovery Colors) */
-        .medical-hot { 
-            background: rgba(255, 65, 54, 0.05); 
-            border-right: 6px solid #FF4136; 
-            padding: 20px; 
-            border-radius: 12px; 
-            margin-bottom: 15px; 
-            text-align: right; 
-        }
-        
-        .medical-cold { 
-            background: rgba(0, 116, 217, 0.05); 
-            border-right: 6px solid #0074D9; 
-            padding: 20px; 
-            border-radius: 12px; 
-            margin-bottom: 15px; 
-            text-align: right; 
-        }
-        
-        .medical-swim { 
-            background: rgba(46, 204, 64, 0.05); 
-            border-right: 6px solid #2ECC40; 
-            padding: 20px; 
-            border-radius: 12px; 
-            margin-bottom: 15px; 
-            text-align: right; 
-        }
-        
-        .medical-warning { 
-            background: rgba(255, 133, 27, 0.05); 
-            border-right: 6px solid #FF851B; 
-            padding: 20px; 
-            border-radius: 12px; 
-            margin-bottom: 15px; 
-            text-align: right; 
-        }
-        
-        /* صناديق التنبيه العامة */
-        .alert-box { 
-            background: rgba(255, 65, 54, 0.1); 
-            border: 1px solid #FF4136; 
-            padding: 15px; 
-            border-radius: 10px; 
-            color: #FF4136; 
-            text-align: right; 
-            margin-bottom: 15px; 
-            font-weight: bold;
-        }
-        
-        .success-box { 
-            background: rgba(46, 204, 64, 0.1); 
-            border: 1px solid #2ECC40; 
-            padding: 15px; 
-            border-radius: 10px; 
-            color: #2ECC40; 
-            text-align: right; 
-            margin-bottom: 15px; 
-            font-weight: bold;
-        }
-        
-        /* تفاصيل التمارين (Biomechanics) */
+        .medical-hot { background: rgba(255, 65, 54, 0.05); border-right: 6px solid #FF4136; padding: 20px; border-radius: 12px; margin-bottom: 15px; text-align: right; }
+        .medical-cold { background: rgba(0, 116, 217, 0.05); border-right: 6px solid #0074D9; padding: 20px; border-radius: 12px; margin-bottom: 15px; text-align: right; }
+        .medical-swim { background: rgba(46, 204, 64, 0.05); border-right: 6px solid #2ECC40; padding: 20px; border-radius: 12px; margin-bottom: 15px; text-align: right; }
+        .medical-warning { background: rgba(255, 133, 27, 0.05); border-right: 6px solid #FF851B; padding: 20px; border-radius: 12px; margin-bottom: 15px; text-align: right; }
+        .alert-box { background: rgba(255, 65, 54, 0.1); border: 1px solid #FF4136; padding: 15px; border-radius: 10px; color: #FF4136; text-align: right; margin-bottom: 15px; font-weight: bold;}
+        .success-box { background: rgba(46, 204, 64, 0.1); border: 1px solid #2ECC40; padding: 15px; border-radius: 10px; color: #2ECC40; text-align: right; margin-bottom: 15px; font-weight: bold;}
         .bio-good { color: #2ECC40; font-weight: bold; }
         .bio-bad { color: #FF4136; font-weight: bold; }
         .bio-breath { color: #0074D9; font-weight: bold; }
@@ -169,38 +97,31 @@ def inject_custom_css():
     """
     st.markdown(css_code, unsafe_allow_html=True)
 
+inject_custom_css()
+
 # =====================================================================
 # 3. ROBUST SESSION STATE MANAGEMENT
 # =====================================================================
 def initialize_session_states():
-    """
-    تهيئة المتغيرات لضمان عدم ضياع البيانات أثناء التصفح
-    """
+    """تهيئة المتغيرات لضمان عدم ضياع البيانات أثناء التصفح"""
     states = [
-        'attendance_mode', 
-        'selected_origin_loc', 
-        'daily_protein', 
-        'daily_cals', 
-        'swim_cals_burned'
+        'attendance_mode', 'selected_origin_loc', 
+        'daily_protein', 'daily_cals', 'swim_cals_burned'
     ]
-    
-    if 'attendance_mode' not in st.session_state: 
-        st.session_state['attendance_mode'] = "Full"
-    if 'selected_origin_loc' not in st.session_state: 
-        st.session_state['selected_origin_loc'] = "المنزل (جدة - المروة)"
-    if 'daily_protein' not in st.session_state: 
-        st.session_state['daily_protein'] = 0
-    if 'daily_cals' not in st.session_state: 
-        st.session_state['daily_cals'] = 0
-    if 'swim_cals_burned' not in st.session_state: 
-        st.session_state['swim_cals_burned'] = 0
+    if 'attendance_mode' not in st.session_state: st.session_state['attendance_mode'] = "Full"
+    if 'selected_origin_loc' not in st.session_state: st.session_state['selected_origin_loc'] = "المنزل (جدة - المروة)"
+    if 'daily_protein' not in st.session_state: st.session_state['daily_protein'] = 0
+    if 'daily_cals' not in st.session_state: st.session_state['daily_cals'] = 0
+    if 'swim_cals_burned' not in st.session_state: st.session_state['swim_cals_burned'] = 0
+
+initialize_session_states()
 
 # =====================================================================
 # 4. CLOUD DATABASE CONNECTORS (Google Sheets)
 # =====================================================================
 @st.cache_resource(ttl="10m")
 def get_db_connection():
-    """اتصال صامت ومأمن بالسحابة لمنع رسائل الخطأ الحمراء"""
+    """اتصال صامت ومأمن بالسحابة"""
     try: 
         return st.connection("gsheets", type=GSheetsConnection)
     except Exception: 
@@ -209,8 +130,7 @@ def get_db_connection():
 def fetch_sheet_safe(sheet_name):
     """جلب بيانات آمن يمنع انهيار التطبيق"""
     conn = get_db_connection()
-    if conn is None: 
-        return pd.DataFrame()
+    if conn is None: return pd.DataFrame()
     try: 
         return conn.read(worksheet=sheet_name, ttl="0s").dropna(how='all')
     except Exception: 
@@ -219,15 +139,10 @@ def fetch_sheet_safe(sheet_name):
 def append_to_sheet_safe(sheet_name, new_data_dict):
     """إضافة سجلات جديدة (تمارين، صحة، انبودي)"""
     conn = get_db_connection()
-    if not conn: 
-        return False, "لا يوجد اتصال بالإنترنت، لم يتم الحفظ."
+    if not conn: return False, "لا يوجد اتصال بالإنترنت، لم يتم الحفظ."
     try:
         df = conn.read(worksheet=sheet_name, ttl="0s")
-        if df.empty:
-            updated_df = pd.DataFrame([new_data_dict])
-        else:
-            updated_df = pd.concat([df, pd.DataFrame([new_data_dict])], ignore_index=True)
-            
+        updated_df = pd.DataFrame([new_data_dict]) if df.empty else pd.concat([df, pd.DataFrame([new_data_dict])], ignore_index=True)
         conn.update(worksheet=sheet_name, data=updated_df)
         return True, "تم التوثيق في قاعدة البيانات بنجاح."
     except Exception as e: 
@@ -236,8 +151,7 @@ def append_to_sheet_safe(sheet_name, new_data_dict):
 def overwrite_sheet_safe(sheet_name, df_new):
     """تحديث شامل لجدول الأسبوع"""
     conn = get_db_connection()
-    if not conn: 
-        return False, "فشل الاتصال."
+    if not conn: return False, "فشل الاتصال."
     try:
         conn.update(worksheet=sheet_name, data=df_new)
         return True, "تم اعتماد المخطط بنجاح."
@@ -245,7 +159,7 @@ def overwrite_sheet_safe(sheet_name, df_new):
         return False, f"فشل الرفع: {str(e)}"
 
 # =====================================================================
-# 5. INTERNAL ROUTING ENGINE (بديل جوجل ماب - تم تطويره لمعالجة الـ 8 ساعات)
+# 5. INTERNAL ROUTING ENGINE (بديل جوجل ماب المدفوع)
 # =====================================================================
 def haversine_distance(lat1, lon1, lat2, lon2):
     """معادلة رياضية لحساب المسافة الجغرافية بالكيلومتر"""
@@ -283,83 +197,64 @@ def calculate_smart_eta(origin_name):
     return final_eta_mins, distance_km
 
 # =====================================================================
-# 6. CLINICAL RECOVERY PROTOCOL (إصلاح خطأ الـ HTML الذي ظهر في الصورة)
+# 6. MEDICAL & CLINICAL RECOVERY DATABASE (قاعدة الاستشفاء الطبي)
 # =====================================================================
 def get_medical_recovery_protocol(is_high_intensity):
-    """
-    تمت إزالة المسافات البادئة (Indentation) التي تسببت في ظهور الكود كنص.
-    هذا هو البروتوكول الطبي المفصل للعلاج التبايني والتعافي.
-    """
+    """بروتوكول طبي مفصل للاستشفاء."""
+    html = "<div class='titan-card'><h3 style='margin-top:0;'>🏥 العيادة الطبية الرياضية (بروتوكولات الاستشفاء)</h3>"
+    
     if is_high_intensity:
-        # الكود يجب أن يكون ملاصقاً للحافة اليسرى لمنع Streamlit من اعتباره Code Block
-        html = textwrap.dedent("""
-        <div class='titan-card'>
-        <h3 style='margin-top:0;'>🏥 العيادة الطبية (بروتوكول اليوم العنيف)</h3>
-        <p style='color:#888; text-align:right;'>المجهود عالي (أرجل/مقاومة عنيفة). حمض اللاكتيك متراكم. سنطبق (العلاج التبايني).</p>
-        
+        html += """
+        <p style='color:#888; text-align:right;'>المجهود عالي (تمارين مقاومة عنيفة). حمض اللاكتيك متراكم. سنطبق (العلاج التبايني).</p>
         <div class='medical-hot'>
-        <h4 style='color:#FF4136; margin:0;'>🔥 المرحلة 1: التوسيع الوعائي (Vasodilation)</h4>
-        <p style='margin-top:5px; font-size:15px;'>الهدف: ضخ الدم المحمل بالغذاء للعضلات.</p>
-        <ul style='font-size:14px;'>
-        <li><b>غرفة البخار (Steam Room):</b> من 5 إلى 8 دقائق. (أفضل من الساونا لترطيب الشعب الهوائية).</li>
-        <li><b>الجاكوزي الحار:</b> بديل ممتاز للبخار (5 دقائق).</li>
-        </ul>
+            <h4 style='color:#FF4136; margin:0;'>🔥 المرحلة 1: التوسيع الوعائي (Vasodilation)</h4>
+            <p style='margin-top:5px; font-size:15px;'>الهدف: ضخ الدم المحمل بالغذاء للعضلات الممزقة.</p>
+            <ul>
+                <li><b>غرفة البخار (Steam Room):</b> من 5 إلى 8 دقائق. (أفضل من الساونا الجافة لترطيب الشعب الهوائية).</li>
+                <li><b>أو الجاكوزي الحار:</b> 5 دقائق متواصلة.</li>
+            </ul>
         </div>
-        
         <div class='medical-cold'>
-        <h4 style='color:#0074D9; margin:0;'>🧊 المرحلة 2: الانقباض الوعائي (Vasoconstriction)</h4>
-        <p style='margin-top:5px; font-size:15px;'>الهدف: عصر الدم الفاسد وحمض اللاكتيك خارج العضلة.</p>
-        <ul style='font-size:14px;'>
-        <li><b>الجاكوزي البارد:</b> انزل مباشرة من الحار إلى البارد لمدة دقيقة إلى دقيقتين.</li>
-        </ul>
+            <h4 style='color:#0074D9; margin:0;'>🧊 المرحلة 2: الانقباض الوعائي (Vasoconstriction)</h4>
+            <p style='margin-top:5px; font-size:15px;'>الهدف: عصر الدم الفاسد وحمض اللاكتيك وتقليل الالتهاب.</p>
+            <ul>
+                <li><b>الجاكوزي البارد:</b> انزل مباشرة من الحار إلى البارد لمدة دقيقة إلى دقيقتين فقط.</li>
+            </ul>
         </div>
-        
         <div class='medical-warning'>
-        <h4 style='color:#FF851B; margin:0;'>⚠️ تحذير طبي للخصوبة (Fertility & CNS)</h4>
-        <p style='margin-top:5px; font-size:15px;'>كرر الانتقال (حار-بارد) <b>3 مرات</b>. <br><b>قاعدة صارمة:</b> يجب أن تنهي دورتك بالماء البارد جداً وتخرج. الخروج وجسمك حار يرفع حرارة الخصيتين ويدمر التستوستيرون.</p>
+            <h4 style='color:#FF851B; margin:0;'>⚠️ تحذير طبي (Fertility & CNS)</h4>
+            <p style='margin-top:5px; font-size:15px;'>كرر الانتقال بين الحار والبارد <b>3 مرات متتالية</b>. <br><br><b>قاعدة طبية صارمة:</b> يجب أن تنهي الدورة (بالماء البارد). الخروج وجسمك حار يرفع حرارة الخصيتين ويدمر التستوستيرون.</p>
         </div>
-        </div>
-        """)
+        """
     else:
-        html = textwrap.dedent("""
-        <div class='titan-card'>
-        <h3 style='margin-top:0;'>🏥 العيادة الطبية (بروتوكول التبريد العميق)</h3>
-        <p style='color:#888; text-align:right;'>المجهود متوسط. سنركز على الاستشفاء النشط ورفع المناعة.</p>
-        
+        html += """
+        <p style='color:#888; text-align:right;'>المجهود متوسط. سنركز على الاستشفاء النشط.</p>
         <div class='medical-swim'>
-        <h4 style='color:#2ECC40; margin:0;'>🏊 المرحلة 1: الاستشفاء النشط (Active Recovery)</h4>
-        <p style='margin-top:5px; font-size:15px;'>الهدف: تحريك المفاصل بدون ضغط.</p>
-        <ul style='font-size:14px;'>
-        <li><b>السباحة الهادئة:</b> 15 دقيقة سباحة حرة مستمرة لفكفكة تيبس فقرات الظهر والأكتاف.</li>
-        </ul>
+            <h4 style='color:#2ECC40; margin:0;'>🏊 المرحلة 1: الاستشفاء النشط (Active Recovery)</h4>
+            <p style='margin-top:5px; font-size:15px;'>الهدف: تحريك المفاصل بدون ضغط أو أوزان.</p>
+            <ul>
+                <li><b>السباحة الهادئة:</b> 15 إلى 20 دقيقة سباحة حرة مستمرة لفكفكة تيبس فقرات الظهر.</li>
+            </ul>
         </div>
-        
         <div class='medical-cold'>
-        <h4 style='color:#0074D9; margin:0;'>🧊 المرحلة 2: التبريد العميق (Cold Exposure)</h4>
-        <p style='margin-top:5px; font-size:15px;'>الهدف: رفع التستوستيرون وتقوية المناعة.</p>
-        <ul style='font-size:14px;'>
-        <li><b>الجاكوزي البارد:</b> 3 إلى 5 دقائق متواصلة. ركز على التنفس العميق.</li>
-        </ul>
+            <h4 style='color:#0074D9; margin:0;'>🧊 المرحلة 2: التبريد العميق (Cold Exposure)</h4>
+            <p style='margin-top:5px; font-size:15px;'>الهدف: رفع مستويات التستوستيرون وتقوية المناعة.</p>
+            <ul>
+                <li><b>الجاكوزي البارد:</b> 3 إلى 5 دقائق متواصلة. التركيز على التنفس العميق.</li>
+            </ul>
         </div>
-        
         <div class='medical-warning'>
-        <h4 style='color:#FF851B; margin:0;'>🚫 حظر حراري (No Heat Protocol)</h4>
-        <p style='margin-top:5px; font-size:15px;'><b>يُمنع منعاً باتاً</b> الدخول للساونا، البخار، أو الجاكوزي الحار اليوم. الحرارة تسبب جفافاً خفياً.</p>
+            <h4 style='color:#FF851B; margin:0;'>🚫 حظر حراري (No Heat Protocol)</h4>
+            <p style='margin-top:5px; font-size:15px;'><b>يُمنع منعاً باتاً</b> الدخول للساونا، البخار، أو الجاكوزي الحار اليوم. الحرارة المتكررة تسبب جفافاً يمنع حرق دهون الكرش.</p>
         </div>
-        </div>
-        """)
+        """
+    html += "</div>"
     return html
 
 # =====================================================================
-# 7. MASSIVE BIOMECHANICS & EXERCISE DATABASE (أضخم قاعدة بيانات حركية)
+# 7. BIOMECHANICS & EXERCISE DATABASE (التفصيل الطبي للتمارين)
 # =====================================================================
 def get_biomechanics_db():
-    """
-    قاعدة بيانات عملاقة تفصل أكثر من 40 تمريناً.
-    - طريقة الأداء (Technique)
-    - التنفس (Breathing)
-    - الألم الجيد والسيء (DOMS tracking)
-    """
     db = {
         "صدر": [
             {
@@ -368,7 +263,7 @@ def get_biomechanics_db():
                 "technique": "اضبط الدكة على زاوية 30 درجة فقط. انزل بالبار حتى يلمس أعلى صدرك ببطء، وادفع بقوة.",
                 "breathing": "خذ شهيق عميق وأنت تنزل بالبار، وازفر الهواء بقوة وأنت تدفع للأعلى.",
                 "good_pain": "أعلى الصدر، والجزء الأمامي من الكتف.",
-                "bad_pain": "ألم وخز في مفصل الكتف الداخلي (هذا يعني أن كوعك مفتوح 90 درجة، ضمه للداخل زاوية 45)."
+                "bad_pain": "ألم وخز في مفصل الكتف الداخلي (كوعك مفتوح 90 درجة، ضمه للداخل زاوية 45)."
             },
             {
                 "name": "Flat Dumbbell Press", 
@@ -381,7 +276,7 @@ def get_biomechanics_db():
             {
                 "name": "Decline Cable Flys", 
                 "reps": "12-15 عدة (للنحت والقضاء على التثدي)",
-                "technique": "قف في منتصف الكيبل. اسحب المقابض من الأعلى إلى الأسفل باتجاه حوضك واعصر عضلة الصدر في الأسفل لمدة ثانية.",
+                "technique": "قف في منتصف الكيبل. اسحب المقابض من الأعلى إلى الأسفل باتجاه حوضك واعصر عضلة الصدر في الأسفل.",
                 "breathing": "شهيق عند فتح الذراعين، زفير عند العصر في الأسفل.",
                 "good_pain": "أسفل الصدر، والخط الفاصل بين الصدرين.",
                 "bad_pain": "ألم في الكتف الأمامي (هذا يعني أنك تدفع الكيبل دفعاً ولا تقوم بحركة 'العناق')."
@@ -403,14 +298,6 @@ def get_biomechanics_db():
                 "bad_pain": "ألم شديد في عظمة القص (منتصف الصدر)، يحدث إذا نزلت بعمق مبالغ فيه."
             },
             {
-                "name": "Incline Dumbbell Flys", 
-                "reps": "10-12 عدة (تفتيح علوي)",
-                "technique": "افتح ذراعيك بحركة دائرية كأنك تعانق شجرة كبيرة.",
-                "breathing": "شهيق عميق يملأ الصدر في النزول، زفير في الضم.",
-                "good_pain": "تفتيح في أعلى الصدر.",
-                "bad_pain": "شد في أوتار البايسبس (كوعك مفرود بزيادة، اثنه قليلاً)."
-            },
-            {
                 "name": "Push-ups", 
                 "reps": "15-20 عدة (لضخ الدم النهائي)",
                 "technique": "حافظ على استقامة ظهرك وحوضك. انزل حتى يلامس صدرك الأرض.",
@@ -423,7 +310,7 @@ def get_biomechanics_db():
             {
                 "name": "Deadlift", 
                 "reps": "3-5 عدات (قوة عصبية ورفع تستوستيرون)",
-                "technique": "قف والبار يلامس قصبة ساقك. انزل بحوضك للخلف مع إبقاء ظهرك مستقيماً 100%. ادفع الأرض بقدميك لترفع البار.",
+                "technique": "قف والبار يلامس قصبة ساقك. انزل بحوضك للخلف مع إبقاء ظهرك مستقيماً 100%. ادفع الأرض بقدميك.",
                 "breathing": "خذ نفساً عميقاً جداً واحبسه في بطنك قبل الرفع (Bracing)، ازفر بعد أن تتجاوز الركبة في الصعود.",
                 "good_pain": "القطنية (أسفل الظهر العضلي)، أوتار الركبة، والمؤخرة.",
                 "bad_pain": "ألم حاد أو 'طقطقة' في فقرات العمود الفقري (هذا يعني أن ظهرك كان مقوساً كالقطة، توقف فوراً)."
@@ -451,22 +338,6 @@ def get_biomechanics_db():
                 "breathing": "شهيق قبل السحب، زفير عند ملامسة البار للبطن.",
                 "good_pain": "الظهر الأوسط والمجنص.",
                 "bad_pain": "ألم أسفل الظهر (الوزن ثقيل جداً ولا تستطيع تثبيت الجذع)."
-            },
-            {
-                "name": "T-Bar Row", 
-                "reps": "8-10 عدات (العمق الداخلي للظهر)",
-                "technique": "قف فوق البار وانحنِ. اسحب الوزن باتجاه صدرك السفلي.",
-                "breathing": "زفير في السحب، شهيق في النزول.",
-                "good_pain": "عمق الظهر الداخلي.",
-                "bad_pain": "ألم في الركبة أو أسفل الظهر (عدل وقفتك واثنِ ركبتيك قليلاً)."
-            },
-            {
-                "name": "Single Arm Dumbbell Row", 
-                "reps": "10-12 لكل جهة (تصحيح التوازن)",
-                "technique": "استند بيد وركبة على الدكة. اسحب الدنبل باتجاه خصرك وكأنك تشغل منشاراً.",
-                "breathing": "زفير في السحب، شهيق في النزول.",
-                "good_pain": "المجنص الجانبي.",
-                "bad_pain": "ألم في الكتف الأمامي (أنت تسحب الدنبل لصدرك وليس لخصرك)."
             },
             {
                 "name": "Pull-ups", 
@@ -508,7 +379,7 @@ def get_biomechanics_db():
                 "technique": "امسك البار أو الدنابل. اثنِ ركبتيك قليلاً جداً. ادفع حوضك للخلف لأقصى حد حتى تشعر بشد في فخذك الخلفي، ثم ارجع.",
                 "breathing": "شهيق أثناء دفع الحوض للخلف، زفير عند العودة للأعلى وعصر المؤخرة.",
                 "good_pain": "شد وتمزق إيجابي قوي في الفخذ الخلفي والمؤخرة.",
-                "bad_pain": "ألم في القطنية (أنت تنزل بظهرك بدل أن ترجع حوضك للخلف)."
+                "bad_pain": "ألم في القطنية (أنت تثني ظهرك، حافظ عليه مستقيماً)."
             },
             {
                 "name": "Leg Extension", 
@@ -531,7 +402,7 @@ def get_biomechanics_db():
                 "reps": "15-20 عدة (تكبير السمانة)",
                 "technique": "قف على حافة درجة. انزل بكعبك للأسفل لأقصى تمدد، ثم ادفع للأعلى لأقصى انقباض.",
                 "breathing": "شهيق في النزول، زفير في الدفع.",
-                "good_pain": "احتراق تام في السمانة (عضلة عنيدة تحتاج تكرار عالي).",
+                "good_pain": "احتراق تام في السمانة.",
                 "bad_pain": "ألم في وتر أخيل (أنت تنزل بسرعة وبشكل مفاجئ، انزل ببطء وتحكم)."
             }
         ],
@@ -542,7 +413,7 @@ def get_biomechanics_db():
                 "technique": "قف مستقيماً. ادفع البار للأعلى فوق رأسك مباشرة، وأدخل رأسك قليلاً للأمام عند وصول البار للقمة.",
                 "breathing": "شهيق قبل الدفع، زفير في الأعلى.",
                 "good_pain": "الكتف الأمامي والجانبي بشكل كامل.",
-                "bad_pain": "ألم في أسفل الظهر (أنت تقوس ظهرك للخلف بشكل مبالغ فيه لرفع الوزن، خفف الوزن)."
+                "bad_pain": "ألم في أسفل الظهر (أنت تقوس ظهرك للخلف بشكل مبالغ فيه لرفع الوزن)."
             },
             {
                 "name": "Dumbbell Lateral Raise", 
@@ -553,28 +424,12 @@ def get_biomechanics_db():
                 "bad_pain": "ألم في الترابيس والرقبة (أنت ترفع كتفك بالكامل بدل أن ترفع ذراعك فقط)."
             },
             {
-                "name": "Front Cable Raise", 
-                "reps": "12-15 عدة (الكتف الأمامي)",
-                "technique": "اسحب الكيبل للأمام حتى مستوى نظرك وتحكم بالنزول.",
-                "breathing": "زفير عند الرفع، شهيق في النزول.",
-                "good_pain": "الكتف الأمامي.",
-                "bad_pain": "ألم مفاجئ في مفصل الكتف (الوزن ثقيل)."
-            },
-            {
                 "name": "Face Pulls", 
                 "reps": "15-20 عدة (صحة المفاصل والكتف الخلفي)",
                 "technique": "اسحب الحبل باتجاه وجهك (عند مستوى العين) وافتح يديك للخارج كأنك تستعرض عضلات البايسبس.",
                 "breathing": "زفير عند السحب للوجه، شهيق في العودة.",
                 "good_pain": "الكتف الخلفي وبين لوحي الكتف.",
                 "bad_pain": "ألم في الرقبة (تسحب الحبل لأسفل جداً)."
-            },
-            {
-                "name": "Arnold Press", 
-                "reps": "8-10 عدات (دوران الكتف الشامل)",
-                "technique": "ابدأ والدنابل أمام وجهك (الكفوف تواجهك)، وادفع للأعلى مع دوران الكفوف لتواجه الأمام في القمة.",
-                "breathing": "شهيق في الأسفل، زفير أثناء الدفع والدوران.",
-                "good_pain": "شامل لجميع رؤوس الكتف.",
-                "bad_pain": "المفصل الداخلي الدوار (لا تستخدم وزناً ثقيلاً جداً في هذا التمرين)."
             }
         ],
         "باي": [
@@ -584,7 +439,7 @@ def get_biomechanics_db():
                 "technique": "قف مستقيماً. ارفع البار مع تثبيت كوعك بجانب خصرك. لا تتأرجح بجسمك للخلف.",
                 "breathing": "زفير عند الرفع، شهيق عند النزول ببطء.",
                 "good_pain": "بطن عضلة البايسبس (التكوير).",
-                "bad_pain": "ألم في أسفل الظهر (أنت تتأرجح)، أو ألم في الساعد الداخلي (استخدم EZ Bar بدل البار المستقيم)."
+                "bad_pain": "ألم في أسفل الظهر (أنت تتأرجح)."
             },
             {
                 "name": "Dumbbell Hammer Curl", 
@@ -601,14 +456,6 @@ def get_biomechanics_db():
                 "breathing": "زفير في السحب، شهيق في النزول.",
                 "good_pain": "الجزء السفلي القريب من الكوع للبايسبس.",
                 "bad_pain": "ألم في وتر الكوع (يحدث عندما تفرد يدك 100% في النزول والوزن ثقيل، اترك ثنية بسيطة جداً)."
-            },
-            {
-                "name": "Cable Rope Curl", 
-                "reps": "12-15 عدة (ضخ دم مستمر Pump)",
-                "technique": "استخدم الحبل في الكيبل السفلي. اسحب وافتح الحبل قليلاً في الأعلى لعصر العضلة.",
-                "breathing": "زفير في السحب، شهيق في النزول.",
-                "good_pain": "البايسبس كاملة تحترق من ضخ الدم.",
-                "bad_pain": "لا يوجد غالباً لكونه بالكيبل."
             }
         ],
         "تراي": [
@@ -635,14 +482,6 @@ def get_biomechanics_db():
                 "breathing": "شهيق عميق في النزول، زفير في الدفع.",
                 "good_pain": "طول الترايسبس من الأسفل للأعلى.",
                 "bad_pain": "ألم في الكتف الداخلي أو الرقبة."
-            },
-            {
-                "name": "Close-Grip Bench Press", 
-                "reps": "6-8 عدات (قوة الترايسبس والصدر الداخلي)",
-                "technique": "امسك البار بقبضة أضيق من مستوى الكتف بقليل. انزل للصدر وادفع.",
-                "breathing": "شهيق في النزول، زفير في الدفع.",
-                "good_pain": "الصدر والترايسبس معاً.",
-                "bad_pain": "ألم في الرسغ (القبضة ضيقة جداً، وسعها قليلاً)."
             }
         ],
         "بطن": [
@@ -669,32 +508,6 @@ def get_biomechanics_db():
                 "breathing": "تنفس سطحي ومنتظم ولا تحبس أنفاسك.",
                 "good_pain": "الارتجاف في كامل جدار البطن الداخلي.",
                 "bad_pain": "انهيار أسفل الظهر للأسفل (ارفع حوضك قليلاً)."
-            },
-            {
-                "name": "Ab Roller", 
-                "reps": "8-10 عدات (تدمير شامل لدهون البطن)",
-                "technique": "امسك العجلة وانزل للأمام لأقصى مسافة تستطيع التحكم بها، ثم اسحب جسمك للخلف بعضلات بطنك.",
-                "breathing": "شهيق في التمدد للأمام، زفير قوي في السحب للخلف.",
-                "good_pain": "البطن كاملة من الأعلى للأسفل تتمزق إيجابياً.",
-                "bad_pain": "ألم شديد في القطنية (لم تشد بطنك كفاية أثناء التمدد، لا تذهب بعيداً جداً في البداية)."
-            }
-        ],
-        "جوانب": [
-            {
-                "name": "Cable Woodchoppers", 
-                "reps": "12-15 عدة (نحت الخصر بالدوران المقاوم)",
-                "technique": "قف بجانب الكيبل (مستوى عالي). اسحب المقبض لأسفل وبشكل قطري لركبتك المعاكسة مع دوران الجذع.",
-                "breathing": "زفير قوي مع الدوران والنزول، شهيق في العودة.",
-                "good_pain": "الخواصر الجانبية.",
-                "bad_pain": "ألم في العمود الفقري (أنت تدور بظهرك وليس بعضلات خصرك)."
-            },
-            {
-                "name": "Russian Twists", 
-                "reps": "20-30 عدة (تحمل الجوانب)",
-                "technique": "اجلس وارفع قدميك عن الأرض قليلاً. امسك قرص وزن ودر بجذعك يميناً ويساراً.",
-                "breathing": "تنفس منتظم مع كل دورة.",
-                "good_pain": "الخواصر تشتعل.",
-                "bad_pain": "ألم في القطنية (النزول للخلف مبالغ فيه، اجلس بشكل أكثر استقامة)."
             }
         ]
     }
@@ -704,16 +517,12 @@ def get_biomechanics_db():
         "breathing": "زفير عند المجهود (الدفع/السحب)، شهيق في العودة.", "good_pain": "بطن العضلة", "bad_pain": "المفاصل والأربطة"
     }
     
-    for m in ["تمرين حر"]:
-        db[m] = [
-            {"name": "Custom Machine Workout", "reps": "10-12", "technique": "استخدم الجهاز وتدرج بالأوزان.", "breathing": "زفير بالدفع، شهيق بالعودة.", "good_pain": "العضلة المستهدفة.", "bad_pain": "ألم المفاصل."},
-            {"name": "Cardio Intensive Session", "reps": "30 دقيقة", "technique": "حافظ على نبض قلب مرتفع لحرق الدهون المستعصية.", "breathing": "تنفس عميق من الأنف.", "good_pain": "تسارع التنفس والتعرق الغزير.", "bad_pain": "ألم حاد في الركبة (غير الجهاز إلى الدراجة أو الإليبتيكال)."}
-        ]
+    for m in ["جوانب", "تمرين حر"]:
+        db[m] = [default_ex]
         
     return db
 
 def get_exercise_list(muscle):
-    """إرجاع القائمة للعضلة المطلوبة مع خيار الإدخال اليدوي"""
     db = get_biomechanics_db()
     if not muscle or muscle == "راحة / غياب": return ["➕ إدخال تمرين جديد (يدوي ذكي)"]
     names = []
@@ -727,7 +536,6 @@ def get_exercise_list(muscle):
     return names
 
 def get_exercise_info(ex_name):
-    """جلب التفاصيل الحيوية للتمرين"""
     db = get_biomechanics_db()
     for group in db.values():
         for ex in group:
@@ -751,15 +559,10 @@ def calculate_smart_reps(exercise_name, current_weight):
     return 10
 
 # =====================================================================
-# 8. MASSIVE NUTRITION & MACROS ENGINE (حاسبة الأكل السعودي الشاملة - Offline)
+# 8. MASSIVE NUTRITION & MACROS ENGINE (حاسبة الأكل السعودي)
 # =====================================================================
 def get_nutrition_databases():
-    """
-    أضخم قاعدة بيانات محلية للطعام السعودي والماكروز.
-    تغنيك تماماً عن تطبيقات MyFitnessPal وغيرها.
-    """
     edaam_db = {
-        # إيدامات وطبخ بيت
         "إيدام دجاج بالبطاطس (بدون رز - صحن متوسط)": {"protein": 35, "cals": 320},
         "إيدام دجاج بالبطاطس + صحن رز أبيض (150 جرام)": {"protein": 40, "cals": 580},
         "إيدام لحم بالخضار (بدون رز - قطع لحم صافية)": {"protein": 45, "cals": 450},
@@ -776,22 +579,16 @@ def get_nutrition_databases():
     }
 
     fast_food_db = {
-        # شواية وبروستد
         "نصف حبة دجاج شواية (بدون جلد - الأفضل للتنشيف)": {"protein": 45, "cals": 420},
         "نصف حبة دجاج فحم (مع الجلد)": {"protein": 40, "cals": 550},
         "بروستد (نصف حبة دجاج مقلي مع البطاطس)": {"protein": 35, "cals": 950},
         "وجبة البيك (دجاج مسحب 10 قطع مع بطاطس وثوم)": {"protein": 45, "cals": 1100},
         "وجبة البيك (مسحب 7 قطع بدون بطاطس)": {"protein": 32, "cals": 500},
-        
-        # شاورما ومطاعم سريعة
         "صاروخ شاورما دجاج (عادي بدون جبن إضافي)": {"protein": 25, "cals": 550},
         "صحن شاورما عربي دجاج (مع بطاطس وثوم)": {"protein": 35, "cals": 850},
         "وجبة ماك تشيكن (ساندوتش + بطاطس وسط)": {"protein": 18, "cals": 750},
-        "وجبة بيج ماك": {"protein": 25, "cals": 850},
         "برجر لحم مشوي (مفرد - مطاعم الشوي)": {"protein": 20, "cals": 400},
         "برجر دجاج مشوي (مطعم دايت)": {"protein": 30, "cals": 350},
-        
-        # أكل دايت ومكملات أساسية
         "علبة تونة (مصفاة بالماء - 100 جرام)": {"protein": 26, "cals": 120},
         "علبة تونة (بالزيت - مصفاة قليلاً)": {"protein": 24, "cals": 220},
         "سكوب بروتين (Whey Protein - مع ماء)": {"protein": 25, "cals": 120},
@@ -808,7 +605,7 @@ def get_nutrition_databases():
     return edaam_db, fast_food_db
 
 # =====================================================================
-# 9. WEEKLY STRATEGY ENGINE & DYNAMIC TIME CALCULATION
+# 9. WEEKLY STRATEGY ENGINE (المحرك الاستراتيجي)
 # =====================================================================
 CLASS_BURN = {
     "موتيف 8": 450, "فت كومبات": 650, "كور اكستريم": 350, "ستيب": 450, "اكوا": 350, 
@@ -817,37 +614,39 @@ CLASS_BURN = {
 }
 
 W_ENG = {
-    "موتيف 8": {"iron": "صدر + تراي", "flow": "الصدر يحتاج تركيز عالي. ابدأ بالبنش برس لشد الجزء العلوي."},
-    "فت كومبات": {"iron": "أرجل + بطن", "flow": "يوم حرق الدهون العظيم! سكوات ثقيل أولاً لتحفيز هرمون النمو."},
-    "كور اكستريم": {"iron": "أكتاف + جوانب", "flow": "أكتاف عريضة = خصر أنحف بصرياً. ركز على تمرين Overhead Press."},
-    "ستيب": {"iron": "ظهر + باي", "flow": "شد الظهر يمنع التحدب ويصحح القوام. ركز على الـ Deadlift و السحب."},
-    "اكوا": {"iron": "حديد شامل (Full Body)", "flow": "اختر تمرين مركب واحد لكل عضلة كبيرة (بنش، سكوات، سحب عالي)."},
-    "بامب فت": {"iron": "صدر + أكتاف", "flow": "أوزان متوسطة وتكرارات عالية للـ Pump وضخ الدم للألياف."},
-    "بودي ماكس": {"iron": "أرجل + ظهر", "flow": "أعنف يوم في الأسبوع! يستهدف أكبر عضلتين لنسف الكرش. حافظ على طاقتك."},
-    "رادير": {"iron": "ذراعين (باي وتراي)", "flow": "العب (Supersets) باي مع تراي بشكل متتالي لزيادة الحرق واختصار الوقت."},
-    "جي فت": {"iron": "حديد قوة (Heavy Lift)", "flow": "3 إلى 5 عدات بأقصى وزن حر. راحة 3 دقائق لتجنب إصابة الجهاز العصبي."},
-    "فت اتاك": {"iron": "أرجل + أكتاف", "flow": "تمارين مركبة سريعة لرفع نبض القلب وزيادة معدل الحرق الأيضي."},
-    "موبيلتي": {"iron": "تمرين حر (النقاط الضعيفة)", "flow": "استهدف عضلة متأخرة أو ضعيفة، أو قم بجلسة إطالات عميقة للتعافي."},
-    "لا يوجد": {"iron": "تمرين حر متكامل", "flow": "أنت القائد اليوم. صمم روتينك بناءً على مستوى طاقتك ونشاطك."},
-    "راحة / غياب": {"iron": "راحة", "flow": "استشفاء سلبي وبناء أنسجة. قلل من الكربوهيدرات لعدم وجود مجهود عالي."}
+    "موتيف 8": {"iron": "صدر + تراي", "warmup": "دوران أكتاف 3 دق + إطالة صدر 2 دق", "flow": "الصدر يحتاج تركيز عالي. ابدأ بالبنش برس لشد الجزء العلوي."},
+    "فت كومبات": {"iron": "أرجل + بطن", "warmup": "إطالة ديناميكية للحوض والركب", "flow": "يوم حرق الدهون العظيم! سكوات ثقيل أولاً لتحفيز هرمون النمو."},
+    "كور اكستريم": {"iron": "أكتاف + جوانب", "warmup": "تسخين جذع مركزي + دوران خصر", "flow": "أكتاف عريضة = خصر أنحف بصرياً. ركز على تمرين Overhead Press."},
+    "ستيب": {"iron": "ظهر + باي", "warmup": "إطالة قطنية أسفل الظهر + سحب حبل مطاطي", "flow": "شد الظهر يمنع التحدب ويصحح القوام. ركز على الـ Deadlift و السحب."},
+    "اكوا": {"iron": "حديد شامل (Full Body)", "warmup": "إحماء مفاصل شامل من الرقبة للكاحل", "flow": "اختر تمرين مركب واحد لكل عضلة كبيرة (بنش، سكوات، سحب عالي)."},
+    "بامب فت": {"iron": "صدر + أكتاف", "warmup": "تسخين أكتاف بوزن خفيف 2.5 كيلو", "flow": "أوزان متوسطة وتكرارات عالية للـ Pump وضخ الدم للألياف."},
+    "بودي ماكس": {"iron": "أرجل + ظهر", "warmup": "سكوات وزن الجسم 20 عدة", "flow": "أعنف يوم في الأسبوع! يستهدف أكبر عضلتين لنسف الكرش. حافظ على طاقتك."},
+    "رادير": {"iron": "ذراعين (باي وتراي)", "warmup": "إطالة أوتار الرسغ ببطء شديد", "flow": "العب (Supersets) باي مع تراي بشكل متتالي لزيادة الحرق واختصار الوقت."},
+    "جي فت": {"iron": "حديد قوة (Heavy Lift)", "warmup": "تسخين مفاصل مكثف جداً لتفادي الإصابة", "flow": "3 إلى 5 عدات بأقصى وزن حر. راحة 3 دقائق لتجنب إصابة الجهاز العصبي."},
+    "فت اتاك": {"iron": "أرجل + أكتاف", "warmup": "هرولة خفيفة 3 دق + قفز", "flow": "تمارين مركبة سريعة لرفع نبض القلب وزيادة معدل الحرق الأيضي."},
+    "موبيلتي": {"iron": "تمرين حر (النقاط الضعيفة)", "warmup": "استخدام الـ Foam Roller ببطء", "flow": "استهدف عضلة متأخرة أو ضعيفة، أو قم بجلسة إطالات عميقة للتعافي."},
+    "لا يوجد": {"iron": "تمرين حر متكامل", "warmup": "سير مائل 10 دق", "flow": "أنت القائد اليوم. صمم روتينك بناءً على مستوى طاقتك ونشاطك."},
+    "راحة / غياب": {"iron": "راحة", "warmup": "لا يوجد", "flow": "استشفاء سلبي وبناء أنسجة. قلل من الكربوهيدرات لعدم وجود مجهود عالي."}
 }
 
+def analyze_muscle_balance(plan_df):
+    if plan_df.empty: return True, ""
+    all_muscles = " ".join(plan_df['Muscle'].astype(str))
+    alerts = []
+    if "أرجل" not in all_muscles: alerts.append("🔴 خطأ هندسي: المخطط يفتقد لتمارين الأرجل (وهي المحفز الأول للتستوستيرون وحرق الكرش).")
+    if "ظهر" not in all_muscles: alerts.append("🔴 خلل قوام: يجب تدريب الظهر لسحب الأكتاف وتقويم العمود الفقري.")
+    if all_muscles.count("صدر") > 2: alerts.append("🔴 إجهاد مفرط: الصدر مستهدف بكثافة عالية جداً، سيؤدي للهدم العضلي.")
+    if alerts: return False, "<br>".join(alerts)
+    return True, "🟢 ممتاز: المخطط متوازن، يهاجم الدهون، ويضمن الاستشفاء السليم."
+
 def get_dynamic_schedule(attendance_mode, origin):
-    """
-    المحرك الزمني الدقيق (إصلاح كارثة الـ 8 ساعات).
-    يحسب الوقت بالدقيقة لإنهاء الحديد في 75 دقيقة كحد أقصى.
-    """
+    """المحرك الزمني الدقيق (إصلاح كارثة الـ 8 ساعات حديد)"""
     now = get_makkah_time()
     commute_mins, distance_km = calculate_smart_eta(origin)
-    
-    # الوصول
     arr_obj = now + timedelta(minutes=commute_mins)
     
-    # 10 دقائق إحماء
     iron_start_obj = arr_obj + timedelta(minutes=10)
-    
-    # الحديد مدته المنطقية والعلمية 75 دقيقة كحد أقصى (بعدها يبدأ الهدم العضلي)
-    iron_end_obj = iron_start_obj + timedelta(minutes=75)
+    iron_end_obj = iron_start_obj + timedelta(minutes=75) # الحديد 75 دقيقة كحد أقصى علمياً
     
     now_str = now.strftime("%I:%M %p")
     arr_str = arr_obj.strftime("%I:%M %p")
@@ -857,17 +656,13 @@ def get_dynamic_schedule(attendance_mode, origin):
     return now_str, arr_str, iron_start, iron_end, arr_obj, distance_km, commute_mins
 
 # =====================================================================
-# 10. GLOBAL DIAGNOSTIC SWEEPER (رادار الصيانة الشامل)
+# 10. DIAGNOSTIC SWEEPER (رادار الصيانة الشامل)
 # =====================================================================
 def run_diagnostics():
-    """
-    يفحص اتصال جوجل شيتس ووجود كل ورقة عمل (Tab) بدقة.
-    هذا يضمن لك معرفة الخطأ فوراً إذا تم مسح شيء بالخطأ من الإكسل.
-    """
     report = []
     conn = get_db_connection()
     if not conn:
-        report.append({"status": "error", "msg": "🔴 انقطاع الاتصال بخوادم Google Cloud. تأكد من أن مفاتيح الـ Secrets في Streamlit صحيحة ولم يتم حذفها."})
+        report.append({"status": "error", "msg": "🔴 انقطاع الاتصال بخوادم Google Cloud. تأكد من أن مفاتيح الـ Secrets في Streamlit صحيحة."})
         return report
     report.append({"status": "success", "msg": "🟢 الاتصال بالسحابة فعال وصلاحية (Service Account) نشطة."})
     
@@ -879,12 +674,12 @@ def run_diagnostics():
             report.append({"status": "success", "msg": f"🟢 ورقة العمل `{s}` متصلة وجاهزة للقراءة والكتابة."})
         except Exception as e:
             missing.append(s)
-            report.append({"status": "error", "msg": f"🔴 ورقة العمل `{s}` غير موجودة أو الصلاحيات تمنع الوصول إليها. الخطأ التقني: {str(e)}"})
+            report.append({"status": "error", "msg": f"🔴 ورقة العمل `{s}` غير موجودة. الخطأ التقني: {str(e)}"})
 
     if missing: 
-        report.append({"status": "info", "msg": f"ℹ️ يرجى فتح ملف الإكسل الخاص بك، والضغط على علامة الزائد (+) في الأسفل لإنشاء الأوراق المفقودة وتسميتها تماماً هكذا: {', '.join(missing)}"})
+        report.append({"status": "info", "msg": f"ℹ️ افتح ملف الإكسل واضغط (+) في الأسفل لإنشاء الأوراق المفقودة وتسميتها هكذا: {', '.join(missing)}"})
     else: 
-        report.append({"status": "success", "msg": "🟢 الهيكل المعماري لقاعدة البيانات مكتمل وسليم 100%. النظام جاهز للعمل."})
+        report.append({"status": "success", "msg": "🟢 الهيكل المعماري لقاعدة البيانات مكتمل وسليم 100%."})
     
     return report
 
@@ -919,7 +714,7 @@ def main():
     # -----------------------------------------------------------------
     with t_ops:
         plan_df = fetch_sheet_safe("Weekly_Plan")
-        s_class, iron_target = "موتيف 8", "صدر + تراي" # Default if empty
+        s_class, iron_target = "موتيف 8", "صدر + تراي" # Default
         if not plan_df.empty and 'Date' in plan_df.columns:
             try:
                 r = plan_df[plan_df['Date'] == current_date].iloc[0]
@@ -940,8 +735,6 @@ def main():
             c1, c2 = st.columns([2, 1])
             with c2:
                 st.markdown("<div class='titan-card titan-card-center'><h3 style='margin-top:0;'>📍 الملاحة الداخلية الذكية</h3>", unsafe_allow_html=True)
-                st.info("يتم حساب المسافة بمعادلة Haversine وتطبيق مصفوفة زحام (جدة/مكة) تلقائياً.")
-                
                 loc_list = ["المنزل (جدة - المروة)", "العمل (جدة)", "العمل (مكة المكرمة)"]
                 loc = st.selectbox("الانطلاق من:", loc_list, index=loc_list.index(st.session_state['selected_origin_loc']))
                 st.session_state['selected_origin_loc'] = loc
@@ -958,10 +751,12 @@ def main():
             with c1:
                 now_str, arr_str, iron_start, iron_end, arr_obj, dist, eta_mins = get_dynamic_schedule(st.session_state['attendance_mode'], loc)
                 c_burn = CLASS_BURN.get(s_class, 0)
-                t_flw = W_ENG.get(s_class, {"flow": ""})['flow']
-                t_wrm = W_ENG.get(s_class, {"warmup": "إحماء مفاصل"})['warmup']
                 
-                # رسالة ذكية إذا كان الوقت ظهراً والكلاس مساءً
+                # Fetch dictionary details safely
+                workout_details = W_ENG.get(s_class, {"flow": "لا يوجد", "warmup": "إحماء مفاصل"})
+                t_flw = workout_details.get("flow", "لا يوجد")
+                t_wrm = workout_details.get("warmup", "إحماء مفاصل")
+                
                 class_note = ""
                 if arr_obj.hour < 18 and st.session_state['attendance_mode'] in ["Full", "ClassOnly"]:
                     class_note = "<p style='color:#888; font-size:14px;'>* ملاحظة: الكلاس يبدأ الساعة 9:00 م. تمرينك الآن مبكر جداً، ستضطر للعودة لاحقاً لحضور الكلاس.</p>"
@@ -991,7 +786,7 @@ def main():
                         <p style='font-size:18px;'>الحديد: <b style='color:#FFD700;'>{iron_target}</b></p>
                         <p style='color:#888;'>بما أن الكلاس تم إلغاؤه، لديك طاقة أعلى لكسر الأوزان الحرة وبناء الكتلة.</p>
                         <hr style='border-color: rgba(255,255,255,0.1);'>
-                        <p>🚗 الانطلاق: <b style='color:#D4AF37;'>{now_str}</b> | 🅿️ وصول المواقف: <b style='color:#D4AF37;'>{arr_str}</b></p>
+                        <p>🚗 الانطلاق من {loc}: <b style='color:#D4AF37;'>{now_str}</b> | 🅿️ وصول المواقف: <b style='color:#D4AF37;'>{arr_str}</b></p>
                         <p>🔥 {arr_str} - {iron_start} : إحماء دقيق ({t_wrm})</p>
                         <p>💪 {iron_start} - {(arr_obj + timedelta(minutes=90)).strftime("%I:%M %p")} : <b style='color:#FF4136;'>صالة الحديد (وقت إضافي، العب جولات أكثر)</b></p>
                     </div>
@@ -1002,7 +797,7 @@ def main():
                         <h3 style='margin-top:0; color:#D4AF37;'>🤸 مسار الكارديو واللياقة (الحديد ملغي)</h3>
                         <p style='font-size:18px;'>الكلاس: <b style='color:#FFD700;'>{s_class}</b></p>
                         <hr style='border-color: rgba(255,255,255,0.1);'>
-                        <p>🚗 الانطلاق: <b style='color:#D4AF37;'>{now_str}</b> | 🅿️ وصول: <b style='color:#D4AF37;'>{arr_str}</b></p>
+                        <p>🚗 الانطلاق: <b style='color:#D4AF37;'>{now_str}</b> | 🅿️ الوصول: <b style='color:#D4AF37;'>{arr_str}</b></p>
                         <p>🤸 09:00 PM - 09:50 PM : <b style='color:#D4AF37;'>الكلاس (حرق ~{c_burn} kcal)</b></p>
                         {class_note}
                     </div>
@@ -1039,7 +834,9 @@ def main():
                 with cols[i % 3]:
                     st.markdown(f"<h5 style='color:#E0E0E0; text-align:right;'>{d}<br><span style='font-size:12px; color:#888;'>{ex_dt}</span></h5>", unsafe_allow_html=True)
                     ch = st.selectbox("الكلاس", opts, index=idx, key=f"c_{d}", label_visibility="collapsed")
-                    ns.append({"Day": d, "Date": ex_dt, "Class": ch, "Muscle": W_ENG[ch]['iron'], "Status": "مجدول"})
+                    # Safe dictionary access
+                    workout_details_setup = W_ENG.get(ch, {"iron": "غير محدد"})
+                    ns.append({"Day": d, "Date": ex_dt, "Class": ch, "Muscle": workout_details_setup['iron'], "Status": "مجدول"})
             
             st.markdown("<hr style='border-color:#333;'>", unsafe_allow_html=True)
             if st.form_submit_button("✅ فحص هندسي واعتماد المخطط في السحابة", use_container_width=True):
@@ -1054,7 +851,7 @@ def main():
     # -----------------------------------------------------------------
     with t_log:
         st.markdown("### 🏋️ علم الحركة الحيوية (Biomechanics) وتسجيل الأوزان")
-        t_muscle = iron_target # From Tab 1
+        t_muscle = iron_target
         
         c1, c2 = st.columns([1, 2])
         with c1:
@@ -1074,9 +871,8 @@ def main():
             ex_list = get_exercise_list(t_muscle)
             s_ex = st.selectbox("اختر التمرين من قاعدة البيانات الضخمة:", ex_list)
             
-            # معالجة الإدخال اليدوي الذكي
             if "يدوي ذكي" in s_ex:
-                f_ex = st.text_input("اكتب اسم التمرين الجديد (يُفضل بالإنجليزية לتوحيد السجلات):")
+                f_ex = st.text_input("اكتب اسم التمرين الجديد (يُفضل بالإنجليزية لتوحيد السجلات):")
             else:
                 f_ex = s_ex
             
@@ -1095,11 +891,10 @@ def main():
             </div>
             """, unsafe_allow_html=True)
             
-            df_logs = fetch_sheet_safe("Workout_Logs")
-            if not df_logs.empty and 'Exercise' in df_logs.columns and f_ex in df_logs['Exercise'].values:
-                last_r = df_logs[df_logs['Exercise'] == f_ex].iloc[-1]
-                st.markdown(f"<p style='color:#888;'>آخر مرة تمرنت ({last_r['Date']}): <b>{last_r['Weight']} KG</b> × {last_r['Reps']} عدات</p>", unsafe_allow_html=True)
-                last_w = float(last_r['Weight'])
+            p_date, p_weight, p_reps = fetch_historical_data(f_ex)
+            if p_date:
+                st.markdown(f"<div style='background:#111; padding:10px; border-radius:8px; border-right:4px solid #D4AF37; margin-bottom:15px;'><p style='color:#888; margin:0;'>آخر مرة ({p_date}): <b>{p_weight} KG</b> × {p_reps} عدات</p></div>", unsafe_allow_html=True)
+                last_w = float(p_weight)
             else: 
                 last_w = 0.0
             
@@ -1124,7 +919,6 @@ def main():
     with t_clinic:
         st.markdown("### 🏥 العيادة الطبية والاستشفاء (Medical Recovery)")
         
-        # استدعاء بروتوكول العلاج التبايني الذي تم إصلاحه
         is_heavy_day = today_ar in ["الاثنين", "الخميس"] or "أرجل" in iron_target or st.session_state['attendance_mode'] == "IronOnly"
         protocol_html = get_medical_recovery_protocol(is_heavy_day)
         st.markdown(protocol_html, unsafe_allow_html=True)
@@ -1137,7 +931,6 @@ def main():
             with st.form("swim_form"):
                 s_mins = st.number_input("كم دقيقة سبحت اليوم بشكل مستمر؟", min_value=0, value=15, step=5)
                 if st.form_submit_button("حساب السعرات وإضافتها للعداد", use_container_width=True):
-                    # معادلة حرق السباحة لوزن 91.9 كيلو = تقريباً 8.5 سعرة في الدقيقة
                     c_burn = int(s_mins * 8.5) 
                     st.session_state['swim_cals_burned'] = c_burn
                     st.success(f"ممتاز! تم حرق {c_burn} سعرة حرارية من السباحة. (تم تسجيلها في نظام الوقود)")
@@ -1163,16 +956,14 @@ def main():
     # -----------------------------------------------------------------
     with t_fuel:
         st.markdown("### 🥗 حاسبة الماكروز العميقة (المطبخ السعودي - Offline)")
-        st.info("قم ببناء وجباتك بدقة من خلال إضافة الأصناف والكميات. النظام سيجمع السعرات والبروتين ويخصم منها حرق السباحة.")
+        st.info("قم ببناء وجباتك بدقة من خلال إضافة الأصناف والكميات. النظام سيجمع السعرات والبروتين ويخصم منها حرق السباحة تلقائياً وبالمجان.")
         
         c_f1, c_f2 = st.columns([1, 1.2])
         e_db, f_db = get_nutrition_databases()
-        full_food_db = {**e_db, **f_db} # دمج قواعد البيانات
+        full_food_db = {**e_db, **f_db} 
         
         with c_f2:
             st.markdown("<div class='titan-card' style='text-align:right;'><h4>أضف مكونات طعامك للعداد</h4>", unsafe_allow_html=True)
-            
-            # قائمة منسدلة عملاقة
             sel_food = st.selectbox("ابحث واختر الصنف (من المطاعم وطبخ البيت):", list(full_food_db.keys()))
             qty = st.number_input("الكمية (عدد الحصص المذكورة في اسم الصنف):", min_value=1.0, value=1.0, step=0.5)
             
@@ -1189,11 +980,11 @@ def main():
             if st.button("➕ إضافة الإدخال اليدوي للعداد", use_container_width=True):
                 st.session_state['daily_protein'] += m_p
                 st.session_state['daily_cals'] += m_c
-                st.success("تمت الإضافة بنجاح.")
+                st.success("تم جمع القيم المدخلة يدوياً للعداد النهائي.")
             st.markdown("</div>", unsafe_allow_html=True)
             
         with c_f1:
-            tar_prot = int(91.9 * 2.2) # الهدف لمنع هدم العضلات
+            tar_prot = int(91.9 * 2.2) 
             tar_cals = 1900
             
             st.markdown(f"""
