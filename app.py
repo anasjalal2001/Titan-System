@@ -10,13 +10,14 @@ import math
 # =====================================================================
 
 st.set_page_config(
-    page_title="Titan V37 - Enterprise Monolith", 
+    page_title="Titan V38 - The Unbreakable Foundation", 
     page_icon="👑", 
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
 def get_makkah_time():
+    """محرك التوقيت الدقيق لمكة المكرمة (UTC+3)"""
     utc_time = datetime.utcnow()
     makkah_time = utc_time + timedelta(hours=3)
     return makkah_time
@@ -26,29 +27,31 @@ def get_makkah_time():
 # =====================================================================
 
 def inject_custom_css():
-    css_code = "".join([
-        "<style>",
-        ".stApp { background-color: #050505; color: #F0F0F0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }",
-        "h1, h2, h3, h4, h5 { color: #D4AF37 !important; text-align: center; font-weight: 900; letter-spacing: 1px; margin-bottom: 15px; }",
-        ".stTabs [data-baseweb='tab-list'] { gap: 8px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }",
-        ".stTabs [data-baseweb='tab'] { border: 2px solid #D4AF37; background-color: #0A0A0A; border-radius: 12px; padding: 12px 18px; color: #D4AF37; font-size: 15px; font-weight: bold; transition: all 0.3s ease; }",
-        ".stTabs [aria-selected='true'] { background-color: #D4AF37 !important; color: #000000 !important; box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); transform: scale(1.05); }",
-        ".titan-card { background: linear-gradient(145deg, #11151A, #080A0F); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 20px; padding: 30px; margin-bottom: 25px; text-align: right; box-shadow: 0 15px 25px rgba(0,0,0,0.8); }",
-        ".titan-card-center { text-align: center; }",
-        ".gold-value { color: #FFD700; font-size: 40px; font-weight: 900; margin: 15px 0; text-shadow: 0px 0px 10px rgba(212, 175, 55, 0.3); }",
-        ".macro-val { color: #E0E0E0; font-size: 28px; font-weight: bold; }",
-        ".medical-hot { background: rgba(255, 65, 54, 0.05); border-right: 6px solid #FF4136; padding: 20px; border-radius: 12px; margin-bottom: 15px; text-align: right; }",
-        ".medical-cold { background: rgba(0, 116, 217, 0.05); border-right: 6px solid #0074D9; padding: 20px; border-radius: 12px; margin-bottom: 15px; text-align: right; }",
-        ".medical-swim { background: rgba(46, 204, 64, 0.05); border-right: 6px solid #2ECC40; padding: 20px; border-radius: 12px; margin-bottom: 15px; text-align: right; }",
-        ".medical-warning { background: rgba(255, 133, 27, 0.05); border-right: 6px solid #FF851B; padding: 20px; border-radius: 12px; margin-bottom: 15px; text-align: right; }",
-        ".alert-box { background: rgba(255, 65, 54, 0.1); border: 1px solid #FF4136; padding: 15px; border-radius: 10px; color: #FF4136; text-align: right; margin-bottom: 15px; font-weight: bold; }",
-        ".success-box { background: rgba(46, 204, 64, 0.1); border: 1px solid #2ECC40; padding: 15px; border-radius: 10px; color: #2ECC40; text-align: right; margin-bottom: 15px; font-weight: bold; }",
-        ".bio-good { color: #2ECC40; font-weight: bold; }",
-        ".bio-bad { color: #FF4136; font-weight: bold; }",
-        ".bio-breath { color: #0074D9; font-weight: bold; }",
-        ".bio-tech { color: #FFD700; font-weight: bold; }",
+    """مكتبة التصميم الشاملة - مفصلة لمنع أخطاء التداخل"""
+    css_code = (
+        "<style>\n"
+        ".stApp { background-color: #050505; color: #F0F0F0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }\n"
+        "h1, h2, h3, h4, h5 { color: #D4AF37 !important; text-align: center; font-weight: 900; letter-spacing: 1px; margin-bottom: 15px; }\n"
+        ".stTabs [data-baseweb='tab-list'] { gap: 8px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }\n"
+        ".stTabs [data-baseweb='tab'] { border: 2px solid #D4AF37; background-color: #0A0A0A; border-radius: 12px; padding: 12px 18px; color: #D4AF37; font-size: 15px; font-weight: bold; transition: all 0.3s ease; }\n"
+        ".stTabs [aria-selected='true'] { background-color: #D4AF37 !important; color: #000000 !important; box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); transform: scale(1.05); }\n"
+        ".titan-card { background: linear-gradient(145deg, #11151A, #080A0F); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 20px; padding: 30px; margin-bottom: 25px; text-align: right; box-shadow: 0 15px 25px rgba(0,0,0,0.8); }\n"
+        ".titan-card-center { text-align: center; }\n"
+        ".gold-value { color: #FFD700; font-size: 40px; font-weight: 900; margin: 15px 0; text-shadow: 0px 0px 10px rgba(212, 175, 55, 0.3); }\n"
+        ".macro-val { color: #E0E0E0; font-size: 28px; font-weight: bold; }\n"
+        ".medical-hot { background: rgba(255, 65, 54, 0.05); border-right: 6px solid #FF4136; padding: 20px; border-radius: 12px; margin-bottom: 15px; text-align: right; }\n"
+        ".medical-cold { background: rgba(0, 116, 217, 0.05); border-right: 6px solid #0074D9; padding: 20px; border-radius: 12px; margin-bottom: 15px; text-align: right; }\n"
+        ".medical-swim { background: rgba(46, 204, 64, 0.05); border-right: 6px solid #2ECC40; padding: 20px; border-radius: 12px; margin-bottom: 15px; text-align: right; }\n"
+        ".medical-warning { background: rgba(255, 133, 27, 0.05); border-right: 6px solid #FF851B; padding: 20px; border-radius: 12px; margin-bottom: 15px; text-align: right; }\n"
+        ".alert-box { background: rgba(255, 65, 54, 0.1); border: 1px solid #FF4136; padding: 15px; border-radius: 10px; color: #FF4136; text-align: right; margin-bottom: 15px; font-weight: bold; }\n"
+        ".success-box { background: rgba(46, 204, 64, 0.1); border: 1px solid #2ECC40; padding: 15px; border-radius: 10px; color: #2ECC40; text-align: right; margin-bottom: 15px; font-weight: bold; }\n"
+        ".info-box { background: rgba(0, 116, 217, 0.1); border: 1px solid #0074D9; padding: 15px; border-radius: 10px; color: #0074D9; text-align: right; margin-bottom: 15px; font-weight: bold; }\n"
+        ".bio-good { color: #2ECC40; font-weight: bold; }\n"
+        ".bio-bad { color: #FF4136; font-weight: bold; }\n"
+        ".bio-breath { color: #0074D9; font-weight: bold; }\n"
+        ".bio-tech { color: #FFD700; font-weight: bold; }\n"
         "</style>"
-    ])
+    )
     st.markdown(css_code, unsafe_allow_html=True)
 
 inject_custom_css()
@@ -61,15 +64,18 @@ def initialize_session_states():
         st.session_state['attendance_mode'] = "Full"
     if 'selected_origin_loc' not in st.session_state or not isinstance(st.session_state['selected_origin_loc'], str): 
         st.session_state['selected_origin_loc'] = "المنزل (جدة - المروة)"
-    if 'daily_protein' not in st.session_state: st.session_state['daily_protein'] = 0
+    if 'daily_protein' not in st.session_state: 
+        st.session_state['daily_protein'] = 0
     else:
         try: st.session_state['daily_protein'] = int(st.session_state['daily_protein'])
         except: st.session_state['daily_protein'] = 0
-    if 'daily_cals' not in st.session_state: st.session_state['daily_cals'] = 0
+    if 'daily_cals' not in st.session_state: 
+        st.session_state['daily_cals'] = 0
     else:
         try: st.session_state['daily_cals'] = int(st.session_state['daily_cals'])
         except: st.session_state['daily_cals'] = 0
-    if 'swim_cals_burned' not in st.session_state: st.session_state['swim_cals_burned'] = 0
+    if 'swim_cals_burned' not in st.session_state: 
+        st.session_state['swim_cals_burned'] = 0
     else:
         try: st.session_state['swim_cals_burned'] = int(st.session_state['swim_cals_burned'])
         except: st.session_state['swim_cals_burned'] = 0
@@ -83,33 +89,42 @@ def force_program_reset():
 initialize_session_states()
 
 # =====================================================================
-# 4. CACHED CLOUD CONNECTORS (حل مشكلة حظر جوجل 429)
+# 4. CACHED CLOUD CONNECTORS (إصلاح مشكلة حظر جوجل 429)
 # =====================================================================
+
 @st.cache_resource(ttl=600)
 def get_db_connection():
-    try: return st.connection("gsheets", type=GSheetsConnection)
-    except Exception: return None
+    try: 
+        return st.connection("gsheets", type=GSheetsConnection)
+    except Exception: 
+        return None
 
-@st.cache_data(ttl=600)
-def fetch_sheet_safe(sheet_name):
+@st.cache_data(ttl=600, show_spinner=False)
+def fetch_sheet_cached(sheet_name):
     """
-    يقرأ البيانات ويخزنها 10 دقائق (600 ثانية) لمنع تجاوز حد جوجل.
+    يقرأ البيانات ويخزنها 10 دقائق (600 ثانية) لمنع تجاوز حد جوجل 60 طلب/دقيقة.
+    هذه الدالة تعزل التطبيق تماماً عن خوادم جوجل أثناء تصفحك.
     """
     conn = get_db_connection()
-    if conn is None: return pd.DataFrame()
-    try: return conn.read(worksheet=sheet_name, ttl=600).dropna(how='all')
-    except Exception: return pd.DataFrame()
+    if conn is None: 
+        return pd.DataFrame()
+    try: 
+        df = conn.read(worksheet=sheet_name, ttl=600)
+        return df.dropna(how='all')
+    except Exception: 
+        return pd.DataFrame()
 
 def append_to_sheet_safe(sheet_name, new_data_dict):
-    """
-    يحفظ البيانات الجديدة ويقوم بمسح الكاش (Clear) ليقرأ الجديد فوراً.
-    """
+    """يحفظ البيانات الجديدة ويقوم بمسح الكاش ليقرأ الجديد فوراً."""
     conn = get_db_connection()
-    if not conn: return False, "لا يوجد اتصال بالإنترنت، لم يتم الحفظ."
+    if not conn: 
+        return False, "لا يوجد اتصال بالإنترنت، لم يتم الحفظ."
     try:
-        df = conn.read(worksheet=sheet_name, ttl=0) # يجب قراءة الأحدث قبل الحفظ
-        if df.empty: updated_df = pd.DataFrame([new_data_dict])
-        else: updated_df = pd.concat([df, pd.DataFrame([new_data_dict])], ignore_index=True)
+        df = conn.read(worksheet=sheet_name, ttl=0) # قراءة الأحدث قبل الكتابة
+        if df.empty: 
+            updated_df = pd.DataFrame([new_data_dict])
+        else: 
+            updated_df = pd.concat([df, pd.DataFrame([new_data_dict])], ignore_index=True)
         
         conn.update(worksheet=sheet_name, data=updated_df)
         st.cache_data.clear() # تفريغ الذاكرة بعد الحفظ ليقرأ البيانات الجديدة
@@ -119,12 +134,50 @@ def append_to_sheet_safe(sheet_name, new_data_dict):
 
 def overwrite_sheet_safe(sheet_name, df_new):
     conn = get_db_connection()
-    if not conn: return False, "فشل الاتصال."
+    if not conn: 
+        return False, "فشل الاتصال بالسحابة."
     try:
         conn.update(worksheet=sheet_name, data=df_new)
         st.cache_data.clear() # تفريغ الكاش
         return True, "تم اعتماد المخطط الاستراتيجي."
-    except Exception as e: return False, f"فشل الرفع: {str(e)}"
+    except Exception as e: 
+        return False, f"فشل الرفع الشامل: {str(e)}"
+
+def run_excel_auto_heal():
+    """محرك الإصلاح الذاتي للإكسل"""
+    report = []
+    conn = get_db_connection()
+    if not conn:
+        report.append({"status": "error", "msg": "🔴 انقطاع الاتصال بالسحابة. لا يمكن تنفيذ الإصلاح الذاتي."})
+        return report
+        
+    schemas = {
+        "Weekly_Plan": ["Day", "Date", "Class", "Muscle", "Status"],
+        "Workout_Logs": ["Date", "Muscle", "Exercise", "Weight", "Reps"],
+        "Health_Log": ["Date", "Sleep", "Water", "Protein", "Calories", "Notes"],
+        "InBody_Logs": ["Date", "Weight", "Muscle_Mass", "Fat_Percentage", "Visceral_Fat"]
+    }
+    
+    for sheet_name, required_cols in schemas.items():
+        try:
+            df = conn.read(worksheet=sheet_name, ttl=0)
+            missing_cols = [col for col in required_cols if col not in df.columns]
+            if missing_cols:
+                for col in missing_cols: 
+                    df[col] = ""
+                conn.update(worksheet=sheet_name, data=df)
+                report.append({"status": "success", "msg": f"🛠️ الإصلاح الذاتي: تم حقن الأعمدة الناقصة في ورقة `{sheet_name}`."})
+            else:
+                report.append({"status": "success", "msg": f"🟢 الورقة `{sheet_name}` سليمة بنيوياً 100%."})
+        except Exception:
+            empty_df = pd.DataFrame(columns=required_cols)
+            try:
+                conn.update(worksheet=sheet_name, data=empty_df)
+                report.append({"status": "success", "msg": f"🛠️ الإصلاح الذاتي: تم بناء ورقة `{sheet_name}` المفقودة."})
+            except Exception as creation_error:
+                report.append({"status": "error", "msg": f"🔴 فشل البناء لورقة `{sheet_name}`. تأكد من صلاحية المحرر. الخطأ: {str(creation_error)}"})
+    st.cache_data.clear()
+    return report
 
 # =====================================================================
 # 5. INTERNAL ROUTING ENGINE
@@ -138,12 +191,26 @@ def haversine_distance(lat1, lon1, lat2, lon2):
     return R * c
 
 def calculate_smart_eta(origin_name):
-    dest_lat, dest_lon = 21.5768, 39.1620 
-    if origin_name == "المنزل (جدة - المروة)": origin_lat, origin_lon, base_speed = 21.6214, 39.1989, 50
-    elif origin_name == "العمل (جدة)": origin_lat, origin_lon, base_speed = 21.5200, 39.1700, 40
-    elif origin_name == "العمل (مكة المكرمة)": origin_lat, origin_lon, base_speed = 21.4225, 39.8262, 90 
-    else: origin_lat, origin_lon, base_speed = 21.6214, 39.1989, 50
+    dest_lat = 21.5768
+    dest_lon = 39.1620 
     
+    if origin_name == "المنزل (جدة - المروة)": 
+        origin_lat = 21.6214
+        origin_lon = 39.1989
+        base_speed = 50
+    elif origin_name == "العمل (جدة)": 
+        origin_lat = 21.5200
+        origin_lon = 39.1700
+        base_speed = 40
+    elif origin_name == "العمل (مكة المكرمة)": 
+        origin_lat = 21.4225
+        origin_lon = 39.8262
+        base_speed = 90 
+    else: 
+        origin_lat = 21.6214
+        origin_lon = 39.1989
+        base_speed = 50
+        
     distance_km = haversine_distance(origin_lat, origin_lon, dest_lat, dest_lon)
     base_time_mins = (distance_km / base_speed) * 60
     hour = get_makkah_time().hour
@@ -153,12 +220,14 @@ def calculate_smart_eta(origin_name):
     elif 17 <= hour <= 21: multiplier = 1.8
     else: multiplier = 1.1
         
-    return int(base_time_mins * multiplier) + 5, distance_km
+    final_eta = int(base_time_mins * multiplier) + 5
+    return final_eta, distance_km
 
 # =====================================================================
-# 6. CLINICAL RECOVERY PROTOCOL (حل مشكلة الـ HTML بشكل جذري)
+# 6. CLINICAL RECOVERY PROTOCOL (HTML Formatting Fix)
 # =====================================================================
 def get_medical_recovery_protocol(is_high_intensity):
+    """تم استخدام الربط المباشر للنصوص لمنع تحويلها لكود من قبل Streamlit"""
     if is_high_intensity:
         html = "".join([
             "<div class='titan-card'>",
@@ -510,8 +579,22 @@ def get_biomechanics_db():
     
     for m in ["تمرين حر"]:
         db[m] = [
-            {"name": "Custom Machine Workout", "reps": "10-12", "technique": "استخدم الجهاز وتدرج بالأوزان.", "breathing": "زفير بالدفع، شهيق بالعودة.", "good_pain": "العضلة المستهدفة.", "bad_pain": "ألم المفاصل."},
-            {"name": "Cardio Intensive Session", "reps": "30 دقيقة", "technique": "حافظ على نبض قلب مرتفع لحرق الدهون المستعصية.", "breathing": "تنفس عميق من الأنف.", "good_pain": "تسارع التنفس والتعرق الغزير.", "bad_pain": "ألم حاد في الركبة (غير الجهاز إلى الدراجة أو الإليبتيكال)."}
+            {
+                "name": "Custom Machine Workout", 
+                "reps": "10-12", 
+                "technique": "استخدم الجهاز وتدرج بالأوزان.", 
+                "breathing": "زفير بالدفع، شهيق بالعودة.", 
+                "good_pain": "العضلة المستهدفة.", 
+                "bad_pain": "ألم المفاصل."
+            },
+            {
+                "name": "Cardio Intensive Session", 
+                "reps": "30 دقيقة", 
+                "technique": "حافظ على نبض قلب مرتفع لحرق الدهون المستعصية.", 
+                "breathing": "تنفس عميق من الأنف.", 
+                "good_pain": "تسارع التنفس والتعرق الغزير.", 
+                "bad_pain": "ألم حاد في الركبة (غير الجهاز إلى الدراجة أو الإليبتيكال)."
+            }
         ]
         
     return db
@@ -552,7 +635,7 @@ def get_exercise_info(ex_name):
     }
 
 def fetch_historical_data(exercise_name):
-    df = fetch_sheet_safe("Workout_Logs")
+    df = fetch_sheet_cached("Workout_Logs")
     if not df.empty and 'Exercise' in df.columns:
         past = df[df['Exercise'] == exercise_name]
         if not past.empty:
@@ -561,7 +644,7 @@ def fetch_historical_data(exercise_name):
     return None, None, None
 
 def calculate_smart_reps(exercise_name, current_weight):
-    df = fetch_sheet_safe("Workout_Logs")
+    df = fetch_sheet_cached("Workout_Logs")
     if not df.empty and 'Exercise' in df.columns:
         past = df[df['Exercise'] == exercise_name]
         if not past.empty:
@@ -625,7 +708,7 @@ def get_nutrition_databases():
 # =====================================================================
 # 9. WEEKLY STRATEGY ENGINE & DYNAMIC TIME CALCULATION
 # =====================================================================
-CLASS_BURN = {
+CLASS_BURN_DB = {
     "موتيف 8": 450, 
     "فت كومبات": 650, 
     "كور اكستريم": 350, 
@@ -641,7 +724,7 @@ CLASS_BURN = {
     "راحة / غياب": 0
 }
 
-W_ENG = {
+WORKOUT_ENGINE_DB = {
     "موتيف 8": {
         "iron": "صدر + تراي", 
         "warmup": "دوران أكتاف 3 دق + إطالة صدر 2 دق", 
@@ -713,10 +796,17 @@ def analyze_muscle_balance(plan_df):
     if plan_df.empty: return True, ""
     all_muscles = " ".join(plan_df['Muscle'].astype(str))
     alerts = []
-    if "أرجل" not in all_muscles: alerts.append("🔴 خطأ هندسي: المخطط يفتقد لتمارين الأرجل (وهي المحفز الأول للتستوستيرون وحرق الكرش).")
-    if "ظهر" not in all_muscles: alerts.append("🔴 خلل في القوام: يجب تدريب الظهر لسحب الأكتاف وتصحيح انحناء العمود الفقري.")
-    if all_muscles.count("صدر") > 2: alerts.append("🔴 إجهاد مفرط: الصدر مستهدف بكثافة عالية جداً، هذا سيؤدي للهدم العضلي ولن يتطور.")
-    if len(alerts) > 0: return False, "<br>".join(alerts)
+    
+    if "أرجل" not in all_muscles: 
+        alerts.append("🔴 خطأ هندسي: المخطط يفتقد لتمارين الأرجل (وهي المحفز الأول للتستوستيرون وحرق الكرش).")
+    if "ظهر" not in all_muscles: 
+        alerts.append("🔴 خلل في القوام: يجب تدريب الظهر لسحب الأكتاف وتصحيح انحناء العمود الفقري.")
+    if all_muscles.count("صدر") > 2: 
+        alerts.append("🔴 إجهاد مفرط: الصدر مستهدف بكثافة عالية جداً، هذا سيؤدي للهدم العضلي ولن يتطور.")
+        
+    if len(alerts) > 0: 
+        return False, "<br>".join(alerts)
+        
     return True, "🟢 ممتاز هندسياً: المخطط متوازن، يهاجم الدهون بقوة، ويضمن الاستشفاء السليم."
 
 def get_dynamic_schedule(attendance_mode, origin):
@@ -748,37 +838,7 @@ def get_week_dates():
     return week_dates_dict
 
 # =====================================================================
-# 10. GLOBAL DIAGNOSTIC SWEEPER (رادار الصيانة الشامل)
-# =====================================================================
-def run_diagnostics():
-    report = []
-    conn = get_db_connection()
-    if not conn:
-        report.append({"status": "error", "msg": "🔴 انقطاع الاتصال بخوادم Google Cloud. تأكد من أن مفاتيح الـ Secrets في Streamlit صحيحة ولم يتم مسحها بالخطأ."})
-        return report
-        
-    report.append({"status": "success", "msg": "🟢 الاتصال بالسحابة فعال وصلاحية (Service Account) نشطة."})
-    
-    req_sheets = ["Weekly_Plan", "Workout_Logs", "Health_Log", "InBody_Logs"]
-    missing = []
-    
-    for s in req_sheets:
-        try:
-            conn.read(worksheet=s, ttl="0s")
-            report.append({"status": "success", "msg": f"🟢 ورقة العمل `{s}` متصلة وجاهزة للقراءة والكتابة."})
-        except Exception as e:
-            missing.append(s)
-            report.append({"status": "error", "msg": f"🔴 ورقة العمل `{s}` غير موجودة. الخطأ التقني: {str(e)}"})
-
-    if missing: 
-        report.append({"status": "info", "msg": f"ℹ️ يرجى فتح ملف الإكسل الخاص بك، وإنشاء الأوراق المفقودة وتسميتها تماماً هكذا: {', '.join(missing)}"})
-    else: 
-        report.append({"status": "success", "msg": "🟢 الهيكل المعماري لقاعدة البيانات مكتمل وسليم 100%. النظام جاهز ومدرع."})
-    
-    return report
-
-# =====================================================================
-# 11. MAIN COMMANDER DASHBOARD (واجهة غرفة العمليات الشاملة)
+# 11. MAIN COMMANDER DASHBOARD
 # =====================================================================
 def main():
     initialize_session_states()
@@ -792,7 +852,7 @@ def main():
     current_date = makkah_now.strftime("%Y-%m-%d")
     week_dates = get_week_dates()
 
-    st.markdown("<h1>👑 محرك تايتان V37 (The Final Cache & UI Fix)</h1>", unsafe_allow_html=True)
+    st.markdown("<h1>👑 محرك تايتان V38 (The Unbreakable Foundation)</h1>", unsafe_allow_html=True)
     st.markdown(f"<p style='text-align:center; color:#888;'>المنطقة: مكة المكرمة | اليوم: {today_ar} ({current_date}) | الساعة اللحظية: {makkah_now.strftime('%I:%M %p')}</p>", unsafe_allow_html=True)
 
     t_ops, t_setup, t_log, t_clinic, t_fuel, t_sys = st.tabs([
@@ -808,7 +868,7 @@ def main():
     # TAB 1: OPERATIONS & INTERNAL ROUTING ENGINE
     # -----------------------------------------------------------------
     with t_ops:
-        plan_df = fetch_sheet_safe("Weekly_Plan")
+        plan_df = fetch_sheet_cached("Weekly_Plan")
         s_class, iron_target = "موتيف 8", "صدر + تراي" 
         
         if not plan_df.empty and 'Date' in plan_df.columns:
@@ -884,7 +944,7 @@ def main():
                 now_str, arr_str, iron_start, iron_end, arr_obj, dist, eta_mins = get_dynamic_schedule(st.session_state['attendance_mode'], loc)
                 c_burn = CLASS_BURN_DB.get(s_class, 0)
                 
-                workout_details = W_ENG.get(s_class, {})
+                workout_details = WORKOUT_ENGINE_DB.get(s_class, {})
                 t_flw = workout_details.get("flow", "استراتيجية غير محددة، صمم روتينك.")
                 t_wrm = workout_details.get("warmup", "إحماء مفاصل عام 5 دقائق.")
                 
@@ -928,7 +988,7 @@ def main():
                         "<h3 style='margin-top:0; color:#D4AF37;'>🤸 مسار الكارديو واللياقة (الحديد ملغي)</h3>",
                         f"<p style='font-size:18px;'>الكلاس المجدول: <b style='color:#FFD700;'>{s_class}</b></p>",
                         "<hr style='border-color: rgba(255,255,255,0.1);'>",
-                        f"<p>🚗 الانطلاق من {loc}: <b style='color:#D4AF37;'>{now_str}</b> | 🅿️ وصول المواقف: <b style='color:#D4AF37;'>{arr_str}</b></p>",
+                        f"<p>🚗 الانطلاق من {loc}: <b style='color:#D4AF37;'>{now_str}</b> | 🅿️ الوصول المواقف: <b style='color:#D4AF37;'>{arr_str}</b></p>",
                         f"<p>🤸 09:00 PM - 09:50 PM : <b style='color:#D4AF37;'>حضور الكلاس (حرق متوقع ~{c_burn} kcal)</b></p>",
                         class_note,
                         "</div>"
@@ -953,7 +1013,7 @@ def main():
         st.markdown("### 🗓️ هندسة الأسبوع (مزامنة سحابية تامة)")
         st.info("هذا الجدول متصل بجوجل شيتس. أي تعديل هنا سينعكس على كل الأجهزة.")
         
-        plan_df = fetch_sheet_safe("Weekly_Plan")
+        plan_df = fetch_sheet_cached("Weekly_Plan")
         curr_plan = {}
         if not plan_df.empty and 'Day' in plan_df.columns and 'Class' in plan_df.columns:
             for _, row in plan_df.iterrows():
@@ -962,7 +1022,7 @@ def main():
         with st.form("weekly_master_plan"):
             ns = []
             cols = st.columns(3)
-            opts = list(W_ENG.keys())
+            opts = list(WORKOUT_ENGINE_DB.keys())
             
             for i, d in enumerate(["السبت", "الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس"]):
                 ex_dt = week_dates.get(d, "")
@@ -977,7 +1037,7 @@ def main():
                     st.markdown("".join([f"<h5 style='color:#E0E0E0; text-align:right;'>{d}<br><span style='font-size:12px; color:#888;'>{ex_dt}</span></h5>"]), unsafe_allow_html=True)
                     ch = st.selectbox("اختر الكلاس", opts, index=idx, key=f"c_{d}", label_visibility="collapsed")
                     
-                    workout_details_setup = W_ENG.get(ch, {})
+                    workout_details_setup = WORKOUT_ENGINE_DB.get(ch, {})
                     m_target = workout_details_setup.get('iron', 'غير محدد')
                     
                     ns.append({"Day": d, "Date": ex_dt, "Class": ch, "Muscle": m_target, "Status": "مجدول"})
@@ -1234,10 +1294,10 @@ def main():
                         st.error(s_msg)
 
     # -----------------------------------------------------------------
-    # TAB 6: SYSTEM DIAGNOSTICS SWEEPER
+    # TAB 6: SYSTEM DIAGNOSTICS & AUTO-HEAL
     # -----------------------------------------------------------------
     with t_sys:
-        st.markdown("### 🛠️ مركز الصيانة الشامل والرادار")
+        st.markdown("### 🛠️ مركز الصيانة الشامل ورادار الإصلاح الذاتي")
         st.info("يقوم هذا القسم بمسح شامل لقاعدة البيانات. إذا وجد صفحة أو عموداً ناقصاً، سيقوم بإنشائه وإصلاحه تلقائياً لمنع انهيار التطبيق.")
         
         col_sys1, col_sys2 = st.columns(2)
