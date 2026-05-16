@@ -364,10 +364,7 @@ def predict_smart_reps(exercise_name: str, current_weight: float) -> int:
     return 10
 
 # =====================================================================
-# 9. REAL GEMINI VISION AI INTEGRATION
-# =====================================================================
-
-def analyze_meal_with_gemini(image_bytes: bytes, image_mime: str) -> dict:
+# def analyze_meal_with_gemini(image_bytes: bytes, image_mime: str) -> dict:
     """
     Sends meal image to Gemini Vision API and returns structured nutrition data.
     Requires GEMINI_API_KEY in Streamlit secrets.
@@ -395,11 +392,12 @@ def analyze_meal_with_gemini(image_bytes: bytes, image_mime: str) -> dict:
 
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
 
+    # تم تصحيح الأخطاء الهيكلية هنا بتبديل inline_data إلى inlineData و mime_type إلى mimeType
     payload = {
         "contents": [{
             "parts": [
                 {"text": prompt},
-                {"inline_data": {"mime_type": image_mime, "data": image_b64}}
+                {"inlineData": {"mimeType": image_mime, "data": image_b64}}
             ]
         }],
         "generationConfig": {"temperature": 0.1, "maxOutputTokens": 500}
@@ -410,7 +408,6 @@ def analyze_meal_with_gemini(image_bytes: bytes, image_mime: str) -> dict:
         response.raise_for_status()
         result = response.json()
         raw_text = result["candidates"][0]["content"]["parts"][0]["text"]
-        # Clean JSON if wrapped in markdown
         raw_text = raw_text.replace("```json", "").replace("```", "").strip()
         import json
         nutrition_data = json.loads(raw_text)
@@ -421,7 +418,6 @@ def analyze_meal_with_gemini(image_bytes: bytes, image_mime: str) -> dict:
         return {"error": f"خطأ في API: {str(e)}"}
     except Exception as e:
         return {"error": f"خطأ في تحليل النتيجة: {str(e)}"}
-
 # =====================================================================
 # 10. COMMERCIAL NUTRITION DATABASE
 # =====================================================================
